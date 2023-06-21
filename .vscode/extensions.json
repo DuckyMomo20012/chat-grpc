@@ -1,0 +1,25 @@
+{
+  "recommendations": [
+    "aliariff.auto-add-brackets",
+    "chunsen.bracket-select",
+    "pustelto.bracketeer",
+    "streetsidesoftware.code-spell-checker",
+    "naumovs.color-highlight",
+    "mikestead.dotenv",
+    "EditorConfig.EditorConfig",
+    "usernamehw.errorlens",
+    "ms-python.flake8",
+    "GitHub.copilot",
+    "eamodio.gitlens",
+    "kisstkondoros.vscode-gutter-preview",
+    "ms-python.isort",
+    "esbenp.prettier-vscode",
+    "bmalehorn.print-it",
+    "ms-python.vscode-pylance",
+    "ms-python.python",
+    "stkb.rewrap",
+    "albert.TabOut",
+    "wayou.vscode-todo-highlight",
+    "vscode-icons-team.vscode-icons"
+  ]
+}
