@@ -2,6 +2,7 @@ import asyncio
 import logging
 
 import grpc
+from tortoise import Tortoise
 
 import pkg.protobuf.chat_service.chat_service_pb2_grpc as chat_service_pb2_grpc
 from src.server.internal.chat.services.chat import ChatService
@@ -13,6 +14,7 @@ _cleanup_coroutines = []
 async def serve():
     server = grpc.aio.server()
     chat_service_pb2_grpc.add_ChatServiceServicer_to_server(ChatService(), server)
+
     listen_addr = "[::]:9000"
     server.add_insecure_port(listen_addr)
     logging.info("Starting server on %s", listen_addr)
@@ -25,7 +27,24 @@ async def serve():
         # existing RPCs to continue within the grace period.
         await server.stop(5)
 
+        await Tortoise.close_connections()
+
     _cleanup_coroutines.append(server_graceful_shutdown())
+
+    # NOTE: Initialize Tortoise ORM
+    await Tortoise.init(
+        db_url="postgres://postgres:postgres@localhost:5432/chat",
+        modules={
+            "models": [
+                "src.server.internal.chat.entities.message",
+                "src.server.internal.chat.entities.user",
+            ]
+        },
+    )
+
+    # Generate the schema
+    await Tortoise.generate_schemas()
+
     await server.wait_for_termination()
 
 

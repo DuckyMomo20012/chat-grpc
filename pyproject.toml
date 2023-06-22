@@ -27,6 +27,8 @@ typer = "^0.7.0"
 dearpygui = "^1.9.0"
 grpcio = "^1.54.2"
 protobuf = "^4.23.3"
+pydantic = "^1.10.9"
+tortoise-orm = {extras = ["asyncpg"], version = "^0.19.3"}
 
 [tool.poetry.group.dev.dependencies]
 poethepoet = "^0.20.0"

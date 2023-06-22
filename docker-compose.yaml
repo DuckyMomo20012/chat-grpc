@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  chat_db:
+    container_name: chat_database
+    image: postgres:13.3-alpine
+    restart: always
+    networks:
+      - chat
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: chat
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: pg_isready -U postgres -d chat
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+networks:
+  chat:
+    driver: bridge
