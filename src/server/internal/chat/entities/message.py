@@ -6,7 +6,7 @@ from tortoise.models import Model
 
 
 class Message(Model):
-    id = fields.IntField(pk=True)
+    id = fields.UUIDField(pk=True)
     content = fields.TextField()
     #: The date-time the Message record was created at
     created_time = fields.DatetimeField(auto_now_add=True)
@@ -18,7 +18,7 @@ class Message(Model):
 
 
 class Reaction(Model):
-    id = fields.IntField(pk=True)
+    id = fields.UUIDField(pk=True)
 
     message_id: fields.ForeignKeyRelation["Message"] = fields.ForeignKeyField(
         "models.Message", related_name="reactions"

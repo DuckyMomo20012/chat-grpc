@@ -6,7 +6,7 @@ from src.server.internal.chat.entities.message import Message, Reaction
 
 
 class User(Model):
-    id = fields.IntField(pk=True)
+    id = fields.UUIDField(pk=True)
     user_name = fields.CharField(max_length=255)
 
     messages = fields.ReverseRelation[Message]
