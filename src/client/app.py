@@ -1,15 +1,35 @@
+import asyncio
+import logging
 from typing import Union
 
 import dearpygui.dearpygui as dpg
+import grpc
 
+import pkg.protobuf.chat_service.chat_service_pb2_grpc as chat_service_pb2_grpc
 from src.shared.pages.base import BasePage
+
+
+class Client:
+    chatServiceStub: chat_service_pb2_grpc.ChatServiceStub
+
+    def __init__(self):
+        self.chatServiceStub = None
+
+        asyncio.run(self.connect())
+
+    async def connect(self):
+        async with grpc.aio.insecure_channel("localhost:9000") as channel:
+            self.chatServiceStub = chat_service_pb2_grpc.ChatServiceStub(channel)
 
 
 class App:
     histories: list[Union[int, str]]
+    client: Client
 
     def __init__(self):
         self.histories = []
+
+        self.client = Client()
 
     def goto(self, page: BasePage):
         if len(self.histories) > 0:
@@ -32,6 +52,8 @@ app = App()
 
 def main():
     from src.client.pages.index import IndexPage
+
+    logging.basicConfig()
 
     dpg.create_context()
     dpg.create_viewport(title="Chat App", width=800, height=600)
