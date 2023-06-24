@@ -4,16 +4,32 @@ import logging
 import grpc
 from tortoise import Tortoise
 
+import pkg.protobuf.auth_service.auth_service_pb2_grpc as auth_service_pb2_grpc
 import pkg.protobuf.chat_service.chat_service_pb2_grpc as chat_service_pb2_grpc
-from src.server.internal.chat.services.chat import ChatService
+import src.server.internal.auth.services.auth as AuthService
+import src.server.internal.auth.services.interceptor as AuthInterceptor
+import src.server.internal.chat.services.chat as ChatService
 
 # Coroutines to be invoked when the event loop is shutting down.
 _cleanup_coroutines = []
 
 
+class Server:
+    clients: set
+
+    def __init__(self):
+        self.clients = set()
+
+
 async def serve():
-    server = grpc.aio.server()
-    chat_service_pb2_grpc.add_ChatServiceServicer_to_server(ChatService(), server)
+    interceptors = [AuthInterceptor.JWTAuthInterceptor(secret_key="secret")]
+    server = grpc.aio.server(interceptors=interceptors)
+    chat_service_pb2_grpc.add_ChatServiceServicer_to_server(
+        ChatService.ChatService(), server
+    )
+    auth_service_pb2_grpc.add_AuthServiceServicer_to_server(
+        AuthService.AuthService(), server
+    )
 
     listen_addr = "[::]:9000"
     server.add_insecure_port(listen_addr)
@@ -37,7 +53,7 @@ async def serve():
         modules={
             "models": [
                 "src.server.internal.chat.entities.message",
-                "src.server.internal.chat.entities.user",
+                "src.server.internal.auth.entities.user",
             ]
         },
     )
@@ -46,6 +62,9 @@ async def serve():
     await Tortoise.generate_schemas()
 
     await server.wait_for_termination()
+
+
+server = Server()
 
 
 def main():
