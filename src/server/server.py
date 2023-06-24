@@ -60,6 +60,7 @@ async def serve():
             "models": [
                 "src.server.internal.chat.entities.message",
                 "src.server.internal.auth.entities.user",
+                "src.server.internal.auth.entities.jwt_blacklist",
             ]
         },
     )

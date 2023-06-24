@@ -6,6 +6,7 @@ import tortoise.exceptions
 
 import pkg.protobuf.auth_service.auth_service_pb2 as auth_service_pb2
 import pkg.protobuf.auth_service.auth_service_pb2_grpc as auth_service_pb2_grpc
+import src.server.internal.auth.entities.jwt_blacklist as jwt_blacklist
 import src.server.internal.auth.entities.user as user
 import src.server.server as server
 
@@ -38,10 +39,6 @@ class AuthService(auth_service_pb2_grpc.AuthServiceServicer):
             context.set_code(grpc.StatusCode.UNAUTHENTICATED)
             return auth_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
 
-        # NOTE: Store the client context so we can track the client connection
-        # and send messages to the client
-        server.server.clients.add(context)
-
         accessToken = jwt.encode(
             {
                 "user_id": f"{currUser.id}",
@@ -55,11 +52,15 @@ class AuthService(auth_service_pb2_grpc.AuthServiceServicer):
             access_token=accessToken,
         )
 
-    def SignOut(self, request, context):
-        try:
-            server.server.clients.remove(context)
-        except KeyError:
-            context.set_details("User is already signed out")
-            context.set_code(grpc.StatusCode.NOT_FOUND)
+    async def SignOut(self, request, context):
+        auth_metadata = dict(context.invocation_metadata())
+
+        # # NOTE: We don't need to check if the token is valid here because the
+        # # interceptor will do it for us
+        auth_header = auth_metadata["authorization"]
+
+        auth_scheme, auth_token = auth_header.split(" ")
+
+        await jwt_blacklist.JWTBlacklist.create(token=auth_token)
 
         return auth_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()

@@ -3,6 +3,8 @@ import jwt
 from grpc import ServicerContext
 from grpc_interceptor import AsyncServerInterceptor
 
+import src.server.internal.auth.entities.jwt_blacklist as jwt_blacklist
+
 ignoreEndpoints = ["/auth.v1.AuthService/SignUp", "/auth.v1.AuthService/SignIn"]
 
 
@@ -29,6 +31,11 @@ class JWTAuthInterceptor(AsyncServerInterceptor):
 
         if not auth_token:
             await self.abort_with_unauthenticated(context, "Empty authorization token")
+
+        isBlacklisted = await jwt_blacklist.JWTBlacklist.exists(token=auth_token)
+
+        if isBlacklisted:
+            await self.abort_with_unauthenticated(context, "Token has been revoked")
 
         try:
             # Verify and decode the token
