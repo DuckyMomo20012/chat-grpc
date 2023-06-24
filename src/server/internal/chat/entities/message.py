@@ -29,7 +29,7 @@ class Reaction(Model):
 
 
 if TYPE_CHECKING:
-    from src.server.internal.chat.entities.user import User
+    from src.server.internal.auth.entities.user import User
 
     Message_Pydantic = pydantic_model_creator(Message)
     Reaction_Pydantic = pydantic_model_creator(Reaction)
