@@ -47,7 +47,7 @@ class AuthService(auth_service_pb2_grpc.AuthServiceServicer):
                 "user_id": f"{currUser.id}",
                 "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1),
             },
-            "secret",
+            server.JWT_SECRET_KEY,
         )
 
         return auth_service_pb2.SignInResponse(

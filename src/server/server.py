@@ -9,9 +9,15 @@ import pkg.protobuf.chat_service.chat_service_pb2_grpc as chat_service_pb2_grpc
 import src.server.internal.auth.services.auth as AuthService
 import src.server.internal.auth.services.interceptor as AuthInterceptor
 import src.server.internal.chat.services.chat as ChatService
+from cli import env
 
 # Coroutines to be invoked when the event loop is shutting down.
 _cleanup_coroutines = []
+
+
+PORT: int = env.int("PORT", 9000)
+JWT_SECRET_KEY: str = env.str("JWT_SECRET_KEY")
+DB_CONNECTION_STRING: str = env.str("DB_CONNECTION_STRING")
 
 
 class Server:
@@ -22,7 +28,7 @@ class Server:
 
 
 async def serve():
-    interceptors = [AuthInterceptor.JWTAuthInterceptor(secret_key="secret")]
+    interceptors = [AuthInterceptor.JWTAuthInterceptor(secret_key=JWT_SECRET_KEY)]
     server = grpc.aio.server(interceptors=interceptors)
     chat_service_pb2_grpc.add_ChatServiceServicer_to_server(
         ChatService.ChatService(), server
@@ -31,7 +37,7 @@ async def serve():
         AuthService.AuthService(), server
     )
 
-    listen_addr = "[::]:9000"
+    listen_addr = f"[::]:{PORT}"
     server.add_insecure_port(listen_addr)
     logging.info("Starting server on %s", listen_addr)
     await server.start()
@@ -49,7 +55,7 @@ async def serve():
 
     # NOTE: Initialize Tortoise ORM
     await Tortoise.init(
-        db_url="postgres://postgres:postgres@localhost:5432/chat",
+        db_url=DB_CONNECTION_STRING,
         modules={
             "models": [
                 "src.server.internal.chat.entities.message",
