@@ -6,28 +6,15 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 
 service ChatService {
-    rpc Join(JoinRequest) returns (JoinResponse) {}
-    rpc Leave(LeaveRequest) returns (LeaveResponse) {}
     rpc Send(SendRequest) returns (google.protobuf.Empty) {}
     rpc Fetch(google.protobuf.Empty) returns (stream FetchResponse) {}
     rpc Subscribe(google.protobuf.Empty) returns (stream SubscribeResponse) {}
     rpc HealthCheck(google.protobuf.Empty) returns (HealthCheckResponse) {}
 }
 
-message JoinRequest {
-    string user_name = 1;
-    optional string user_id = 2;
-}
-
-message JoinResponse {
+message SendRequest {
     string user_id = 1;
-}
-
-message LeaveRequest {
-    string user_id = 1;
-}
-
-message LeaveResponse {
+    string content = 2;
 }
 
 message Reaction {
@@ -42,11 +29,6 @@ message Message {
     string content = 3;
     repeated Reaction reactions = 4;
     google.protobuf.Timestamp created_time = 5;
-}
-
-message SendRequest {
-    string user_id = 1;
-    string content = 2;
 }
 
 message FetchResponse {
