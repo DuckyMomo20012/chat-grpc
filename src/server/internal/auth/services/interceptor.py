@@ -3,6 +3,7 @@ import jwt
 from grpc import ServicerContext
 from grpc_interceptor import AsyncServerInterceptor
 
+import src.server.internal.auth.entities.custom_context as custom_context
 import src.server.internal.auth.entities.jwt_blacklist as jwt_blacklist
 
 ignoreEndpoints = ["/auth.v1.AuthService/SignUp", "/auth.v1.AuthService/SignIn"]
@@ -39,7 +40,17 @@ class JWTAuthInterceptor(AsyncServerInterceptor):
 
         try:
             # Verify and decode the token
-            jwt.decode(auth_token, self.secret_key, algorithms=["HS256"])
+            decoded_token = jwt.decode(
+                auth_token, self.secret_key, algorithms=["HS256"]
+            )
+
+            userId = decoded_token["user_id"]
+
+            # Add the user_id to the context
+            extra_context = {"user_id": userId}
+
+            # NOTE: Construct a new context with the extra_context
+            context = custom_context.CustomContext(context, extra_context)
 
         # NOTE: The ExpiredSignatureError MUST be caught before the InvalidTokenError
         except jwt.ExpiredSignatureError:
