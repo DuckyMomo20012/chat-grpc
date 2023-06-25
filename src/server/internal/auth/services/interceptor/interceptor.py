@@ -1,6 +1,7 @@
 import jwt
 
 import src.server.internal.auth.entities.jwt_blacklist as jwt_blacklist
+import src.server.internal.auth.entities.user as user
 import src.shared.interceptor.base_interceptor as base_interceptor
 import src.shared.interceptor.custom_context as custom_context
 
@@ -43,6 +44,11 @@ class JWTAuthInterceptor(base_interceptor.BaseInterceptor):
             )
 
             userId = decoded_token["user_id"]
+
+            isUserExists = await user.User.exists(id=userId)
+
+            if not isUserExists:
+                await self.abort_with_unauthenticated(context, "User not found")
 
             # Add the user_id to the context
             extra_context = {"user_id": userId}
