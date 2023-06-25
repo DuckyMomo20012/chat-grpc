@@ -11,7 +11,10 @@ class Message(Model):
     #: The date-time the Message record was created at
     created_time = fields.DatetimeField(auto_now_add=True)
 
-    user_id: fields.ForeignKeyRelation["User"] = fields.ForeignKeyField(
+    # NOTE: Don't use `user_id` as the field name, because Tortoise ORM will
+    # append `_id` to the field name
+    # Ref: https://tortoise.github.io/models.html#the-db-backing-field
+    user: fields.ForeignKeyRelation["User"] = fields.ForeignKeyField(
         "models.User", related_name="messages"
     )
     reactions = fields.ReverseRelation["Reaction"]
@@ -20,10 +23,10 @@ class Message(Model):
 class Reaction(Model):
     id = fields.UUIDField(pk=True)
 
-    message_id: fields.ForeignKeyRelation["Message"] = fields.ForeignKeyField(
+    message: fields.ForeignKeyRelation["Message"] = fields.ForeignKeyField(
         "models.Message", related_name="reactions"
     )
-    user_id: fields.ForeignKeyRelation["User"] = fields.ForeignKeyField(
+    user: fields.ForeignKeyRelation["User"] = fields.ForeignKeyField(
         "models.User", related_name="reactions"
     )
 
