@@ -1,16 +1,13 @@
-import grpc
 import jwt
-from grpc import ServicerContext
-from grpc_interceptor import AsyncServerInterceptor
-from grpc_interceptor.exceptions import GrpcException
 
 import src.server.internal.auth.entities.jwt_blacklist as jwt_blacklist
-import src.server.internal.auth.services.interceptor.custom_context as custom_context
+import src.shared.interceptor.base_interceptor as base_interceptor
+import src.shared.interceptor.custom_context as custom_context
 
 ignoreEndpoints = ["/auth.v1.AuthService/SignUp", "/auth.v1.AuthService/SignIn"]
 
 
-class JWTAuthInterceptor(AsyncServerInterceptor):
+class JWTAuthInterceptor(base_interceptor.BaseInterceptor):
     def __init__(self, secret_key):
         self.secret_key = secret_key
 
@@ -63,32 +60,3 @@ class JWTAuthInterceptor(AsyncServerInterceptor):
         # Proceed with the gRPC method invocation
         # NOTE: EVERY routes defined MUST be an async function
         return await self.handleRequest(method, request, context)
-
-    async def abort_with_unauthenticated(self, context: ServicerContext, message: str):
-        await context.abort(grpc.StatusCode.UNAUTHENTICATED, message)
-
-    # Ref: https://grpc-interceptor.readthedocs.io/en/latest/#async-server-interceptors
-    async def handleRequest(self, method, request, context):
-        try:
-            response_or_iterator = method(request, context)
-            if not hasattr(response_or_iterator, "__aiter__"):
-                # Unary, just await and return the response
-                return await response_or_iterator
-        except GrpcException as e:
-            await context.set_code(e.status_code)
-            await context.set_details(e.details)
-            raise
-
-        # Server streaming responses, delegate to an async generator helper.
-        # Note that we do NOT await this.
-        return self._intercept_streaming(response_or_iterator, context)
-
-    # Ref: https://grpc-interceptor.readthedocs.io/en/latest/#async-server-interceptors
-    async def _intercept_streaming(self, iterator, context):
-        try:
-            async for r in iterator:
-                yield r
-        except GrpcException as e:
-            await context.set_code(e.status_code)
-            await context.set_details(e.details)
-            raise
