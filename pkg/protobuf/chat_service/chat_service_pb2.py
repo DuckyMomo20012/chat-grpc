@@ -15,7 +15,7 @@ from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n,pkg/protobuf/chat_service/chat_service.proto\x12\x07\x63hat.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"@\n\x0bSendRequest\x12\x17\n\x07user_id\x18\x01 \x01(\tR\x06userId\x12\x18\n\x07\x63ontent\x18\x02 \x01(\tR\x07\x63ontent\"^\n\x08Reaction\x12\x17\n\x07user_id\x18\x01 \x01(\tR\x06userId\x12\x1d\n\nmessage_id\x18\x02 \x01(\tR\tmessageId\x12\x1a\n\x08reaction\x18\x03 \x01(\tR\x08reaction\"\xcb\x01\n\x07Message\x12\x1d\n\nmessage_id\x18\x01 \x01(\tR\tmessageId\x12\x17\n\x07user_id\x18\x02 \x01(\tR\x06userId\x12\x18\n\x07\x63ontent\x18\x03 \x01(\tR\x07\x63ontent\x12/\n\treactions\x18\x04 \x03(\x0b\x32\x11.chat.v1.ReactionR\treactions\x12=\n\x0c\x63reated_time\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x0b\x63reatedTime\"=\n\rFetchResponse\x12,\n\x08messages\x18\x01 \x03(\x0b\x32\x10.chat.v1.MessageR\x08messages\"`\n\x11SubscribeResponse\x12\x32\n\x04type\x18\x01 \x01(\x0e\x32\x1e.chat.v1.SubscribeResponseTypeR\x04type\x12\x17\n\x07user_id\x18\x02 \x01(\tR\x06userId\"-\n\x13HealthCheckResponse\x12\x16\n\x06status\x18\x01 \x01(\tR\x06status*2\n\x15SubscribeResponseType\x12\x0b\n\x07MESSAGE\x10\x00\x12\x0c\n\x08REACTION\x10\x01\x32\x8e\x02\n\x0b\x43hatService\x12\x36\n\x04Send\x12\x14.chat.v1.SendRequest\x1a\x16.google.protobuf.Empty\"\x00\x12;\n\x05\x46\x65tch\x12\x16.google.protobuf.Empty\x1a\x16.chat.v1.FetchResponse\"\x00\x30\x01\x12\x43\n\tSubscribe\x12\x16.google.protobuf.Empty\x1a\x1a.chat.v1.SubscribeResponse\"\x00\x30\x01\x12\x45\n\x0bHealthCheck\x12\x16.google.protobuf.Empty\x1a\x1c.chat.v1.HealthCheckResponse\"\x00\x42\\\n\x0b\x63om.chat.v1B\x10\x43hatServiceProtoP\x01\xa2\x02\x03\x43XX\xaa\x02\x07\x43hat.V1\xca\x02\x07\x43hat\\V1\xe2\x02\x13\x43hat\\V1\\GPBMetadata\xea\x02\x08\x43hat::V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n,pkg/protobuf/chat_service/chat_service.proto\x12\x07\x63hat.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"\'\n\x0bSendRequest\x12\x18\n\x07\x63ontent\x18\x01 \x01(\tR\x07\x63ontent\"0\n\x0fReactionRequest\x12\x1d\n\nmessage_id\x18\x01 \x01(\tR\tmessageId\"#\n\x08Reaction\x12\x17\n\x07user_id\x18\x01 \x01(\tR\x06userId\"\xb2\x01\n\x07Message\x12\x1d\n\nmessage_id\x18\x01 \x01(\tR\tmessageId\x12\x18\n\x07\x63ontent\x18\x02 \x01(\tR\x07\x63ontent\x12/\n\treactions\x18\x03 \x03(\x0b\x32\x11.chat.v1.ReactionR\treactions\x12=\n\x0c\x63reated_time\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x0b\x63reatedTime\"3\n\rFetchResponse\x12\"\n\x03msg\x18\x01 \x01(\x0b\x32\x10.chat.v1.MessageR\x03msg\"}\n\x11SubscribeResponse\x12\x32\n\x04type\x18\x01 \x01(\x0e\x32\x1e.chat.v1.SubscribeResponseTypeR\x04type\x12\x17\n\x07user_id\x18\x02 \x01(\tR\x06userId\x12\x1b\n\tobject_id\x18\x03 \x01(\tR\x08objectId\"-\n\x13HealthCheckResponse\x12\x16\n\x06status\x18\x01 \x01(\tR\x06status*2\n\x15SubscribeResponseType\x12\x0b\n\x07MESSAGE\x10\x00\x12\x0c\n\x08REACTION\x10\x01\x32\xcb\x02\n\x0b\x43hatService\x12\x36\n\x04Send\x12\x14.chat.v1.SendRequest\x1a\x16.google.protobuf.Empty\"\x00\x12;\n\x05React\x12\x18.chat.v1.ReactionRequest\x1a\x16.google.protobuf.Empty\"\x00\x12;\n\x05\x46\x65tch\x12\x16.google.protobuf.Empty\x1a\x16.chat.v1.FetchResponse\"\x00\x30\x01\x12\x43\n\tSubscribe\x12\x16.google.protobuf.Empty\x1a\x1a.chat.v1.SubscribeResponse\"\x00\x30\x01\x12\x45\n\x0bHealthCheck\x12\x16.google.protobuf.Empty\x1a\x1c.chat.v1.HealthCheckResponse\"\x00\x42\\\n\x0b\x63om.chat.v1B\x10\x43hatServiceProtoP\x01\xa2\x02\x03\x43XX\xaa\x02\x07\x43hat.V1\xca\x02\x07\x43hat\\V1\xe2\x02\x13\x43hat\\V1\\GPBMetadata\xea\x02\x08\x43hat::V1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -24,20 +24,22 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'\n\013com.chat.v1B\020ChatServiceProtoP\001\242\002\003CXX\252\002\007Chat.V1\312\002\007Chat\\V1\342\002\023Chat\\V1\\GPBMetadata\352\002\010Chat::V1'
-  _globals['_SUBSCRIBERESPONSETYPE']._serialized_start=695
-  _globals['_SUBSCRIBERESPONSETYPE']._serialized_end=745
+  _globals['_SUBSCRIBERESPONSETYPE']._serialized_start=655
+  _globals['_SUBSCRIBERESPONSETYPE']._serialized_end=705
   _globals['_SENDREQUEST']._serialized_start=119
-  _globals['_SENDREQUEST']._serialized_end=183
-  _globals['_REACTION']._serialized_start=185
-  _globals['_REACTION']._serialized_end=279
-  _globals['_MESSAGE']._serialized_start=282
-  _globals['_MESSAGE']._serialized_end=485
-  _globals['_FETCHRESPONSE']._serialized_start=487
-  _globals['_FETCHRESPONSE']._serialized_end=548
-  _globals['_SUBSCRIBERESPONSE']._serialized_start=550
-  _globals['_SUBSCRIBERESPONSE']._serialized_end=646
-  _globals['_HEALTHCHECKRESPONSE']._serialized_start=648
-  _globals['_HEALTHCHECKRESPONSE']._serialized_end=693
-  _globals['_CHATSERVICE']._serialized_start=748
-  _globals['_CHATSERVICE']._serialized_end=1018
+  _globals['_SENDREQUEST']._serialized_end=158
+  _globals['_REACTIONREQUEST']._serialized_start=160
+  _globals['_REACTIONREQUEST']._serialized_end=208
+  _globals['_REACTION']._serialized_start=210
+  _globals['_REACTION']._serialized_end=245
+  _globals['_MESSAGE']._serialized_start=248
+  _globals['_MESSAGE']._serialized_end=426
+  _globals['_FETCHRESPONSE']._serialized_start=428
+  _globals['_FETCHRESPONSE']._serialized_end=479
+  _globals['_SUBSCRIBERESPONSE']._serialized_start=481
+  _globals['_SUBSCRIBERESPONSE']._serialized_end=606
+  _globals['_HEALTHCHECKRESPONSE']._serialized_start=608
+  _globals['_HEALTHCHECKRESPONSE']._serialized_end=653
+  _globals['_CHATSERVICE']._serialized_start=708
+  _globals['_CHATSERVICE']._serialized_end=1039
 # @@protoc_insertion_point(module_scope)

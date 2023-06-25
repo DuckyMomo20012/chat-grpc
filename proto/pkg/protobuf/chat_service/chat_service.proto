@@ -7,32 +7,33 @@ import "google/protobuf/empty.proto";
 
 service ChatService {
     rpc Send(SendRequest) returns (google.protobuf.Empty) {}
+    rpc React(ReactionRequest) returns (google.protobuf.Empty) {}
     rpc Fetch(google.protobuf.Empty) returns (stream FetchResponse) {}
     rpc Subscribe(google.protobuf.Empty) returns (stream SubscribeResponse) {}
     rpc HealthCheck(google.protobuf.Empty) returns (HealthCheckResponse) {}
 }
 
 message SendRequest {
-    string user_id = 1;
-    string content = 2;
+    string content = 1;
+}
+
+message ReactionRequest {
+    string message_id = 1;
 }
 
 message Reaction {
     string user_id = 1;
-    string message_id = 2;
-    string reaction = 3;
 }
 
 message Message {
     string message_id = 1;
-    string user_id = 2;
-    string content = 3;
-    repeated Reaction reactions = 4;
-    google.protobuf.Timestamp created_time = 5;
+    string content = 2;
+    repeated Reaction reactions = 3;
+    google.protobuf.Timestamp created_time = 4;
 }
 
 message FetchResponse {
-    repeated Message messages = 1;
+    Message msg = 1;
 }
 
 enum SubscribeResponseType {
@@ -43,6 +44,7 @@ enum SubscribeResponseType {
 message SubscribeResponse {
     SubscribeResponseType type = 1;
     string user_id = 2;
+    string object_id = 3;
 }
 
 message HealthCheckResponse {
