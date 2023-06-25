@@ -7,7 +7,7 @@ from tortoise import Tortoise
 import pkg.protobuf.auth_service.auth_service_pb2_grpc as auth_service_pb2_grpc
 import pkg.protobuf.chat_service.chat_service_pb2_grpc as chat_service_pb2_grpc
 import src.server.internal.auth.services.auth as AuthService
-import src.server.internal.auth.services.interceptor as AuthInterceptor
+import src.server.internal.auth.services.interceptor.interceptor as AuthInterceptor
 import src.server.internal.chat.services.chat as ChatService
 from cli import env
 

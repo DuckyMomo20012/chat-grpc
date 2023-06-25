@@ -3,8 +3,8 @@ import jwt
 from grpc import ServicerContext
 from grpc_interceptor import AsyncServerInterceptor
 
-import src.server.internal.auth.entities.custom_context as custom_context
 import src.server.internal.auth.entities.jwt_blacklist as jwt_blacklist
+import src.server.internal.auth.services.interceptor.custom_context as custom_context
 
 ignoreEndpoints = ["/auth.v1.AuthService/SignUp", "/auth.v1.AuthService/SignIn"]
 
