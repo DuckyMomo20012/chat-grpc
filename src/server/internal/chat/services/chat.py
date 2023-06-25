@@ -3,6 +3,7 @@ from google.protobuf.timestamp_pb2 import Timestamp
 
 import pkg.protobuf.chat_service.chat_service_pb2 as chat_service_pb2
 import pkg.protobuf.chat_service.chat_service_pb2_grpc as chat_service_pb2_grpc
+import src.server.internal.chat.entities.event as event
 import src.server.internal.chat.entities.message as message
 
 
@@ -10,7 +11,16 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
     async def Send(self, request, context):
         userId = context.user_id
 
-        await message.Message.create(user_id=userId, content=request.content)
+        newMessage = await message.Message.create(
+            user_id=userId, content=request.content
+        )
+
+        # NOTE: Create new event
+        await event.Event.create(
+            user_id=userId,
+            object_id=newMessage.id,
+            type=event.EventType.MESSAGE,
+        )
 
         return chat_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
 
@@ -26,7 +36,16 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
             context.set_code(grpc.StatusCode.ALREADY_EXISTS)
             return chat_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
 
-        await message.Reaction.create(user_id=userId, message_id=request.message_id)
+        newReaction = await message.Reaction.create(
+            user_id=userId, message_id=request.message_id
+        )
+
+        # NOTE: Create new event
+        await event.Event.create(
+            user_id=userId,
+            object_id=newReaction.id,
+            type=event.EventType.REACTION,
+        )
 
         return chat_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
 

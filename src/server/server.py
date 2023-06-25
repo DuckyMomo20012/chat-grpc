@@ -59,6 +59,7 @@ async def serve():
         modules={
             "models": [
                 "src.server.internal.chat.entities.message",
+                "src.server.internal.chat.entities.event",
                 "src.server.internal.auth.entities.user",
                 "src.server.internal.auth.entities.jwt_blacklist",
             ]
