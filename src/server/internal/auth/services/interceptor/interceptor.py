@@ -2,6 +2,7 @@ import grpc
 import jwt
 from grpc import ServicerContext
 from grpc_interceptor import AsyncServerInterceptor
+from grpc_interceptor.exceptions import GrpcException
 
 import src.server.internal.auth.entities.jwt_blacklist as jwt_blacklist
 import src.server.internal.auth.services.interceptor.custom_context as custom_context
@@ -15,7 +16,7 @@ class JWTAuthInterceptor(AsyncServerInterceptor):
 
     async def intercept(self, method, request, context, method_name):
         if method_name in ignoreEndpoints:
-            return await method(request, context)
+            return await self.handleRequest(method, request, context)
 
         auth_metadata = dict(context.invocation_metadata())
         if "authorization" not in auth_metadata:
@@ -61,7 +62,33 @@ class JWTAuthInterceptor(AsyncServerInterceptor):
 
         # Proceed with the gRPC method invocation
         # NOTE: EVERY routes defined MUST be an async function
-        return await method(request, context)
+        return await self.handleRequest(method, request, context)
 
     async def abort_with_unauthenticated(self, context: ServicerContext, message: str):
         await context.abort(grpc.StatusCode.UNAUTHENTICATED, message)
+
+    # Ref: https://grpc-interceptor.readthedocs.io/en/latest/#async-server-interceptors
+    async def handleRequest(self, method, request, context):
+        try:
+            response_or_iterator = method(request, context)
+            if not hasattr(response_or_iterator, "__aiter__"):
+                # Unary, just await and return the response
+                return await response_or_iterator
+        except GrpcException as e:
+            await context.set_code(e.status_code)
+            await context.set_details(e.details)
+            raise
+
+        # Server streaming responses, delegate to an async generator helper.
+        # Note that we do NOT await this.
+        return self._intercept_streaming(response_or_iterator, context)
+
+    # Ref: https://grpc-interceptor.readthedocs.io/en/latest/#async-server-interceptors
+    async def _intercept_streaming(self, iterator, context):
+        try:
+            async for r in iterator:
+                yield r
+        except GrpcException as e:
+            await context.set_code(e.status_code)
+            await context.set_details(e.details)
+            raise
