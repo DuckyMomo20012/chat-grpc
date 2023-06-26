@@ -60,6 +60,9 @@ class IndexPage(BasePage):
 
                         dpg.add_text(f"{msg.msg.user_name}" + ":")
 
+                        if msg.msg.user_id == app.app.userId:
+                            dpg.configure_item(dpg.last_item(), color=(0, 255, 0))
+
                         dpg.add_text(f"{msg.msg.content}")
 
                         dpg.add_button(label="<3")
