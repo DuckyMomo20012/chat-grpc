@@ -12,6 +12,11 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
     async def Send(self, request, context):
         userId = context.user_id
 
+        if not request.content:
+            context.set_details("Content is empty")
+            context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            return chat_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
+
         newMessage = await message.Message.create(
             user_id=userId, content=request.content
         )
