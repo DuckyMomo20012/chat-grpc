@@ -1,8 +1,8 @@
 import grpc
-from google.protobuf.timestamp_pb2 import Timestamp
 
 import pkg.protobuf.chat_service.chat_service_pb2 as chat_service_pb2
 import pkg.protobuf.chat_service.chat_service_pb2_grpc as chat_service_pb2_grpc
+import src.server.internal.auth.entities.user as user
 import src.server.internal.chat.entities.event as event
 import src.server.internal.chat.entities.event_queue as event_queue
 import src.server.internal.chat.entities.message as message
@@ -54,25 +54,27 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
         messages = await message.Message.all()
 
         for msg in messages:
-            newCreatedTime = Timestamp()
-            newCreatedTime.FromDatetime(msg.created_time)
+            sendUser = await user.User.get(id=msg.user_id)
 
             reactions = await msg.reactions.all()
 
             newReactions = []
             for reaction in reactions:
+                reactionUser = await user.User.get(id=reaction.user_id)
+
                 newReactions.append(
                     chat_service_pb2.Reaction(
-                        user_id=f"{reaction.user_id}",
+                        user_name=f"{reactionUser.user_name}",
                     )
                 )
 
             yield chat_service_pb2.FetchResponse(
                 msg=chat_service_pb2.Message(
                     message_id=f"{msg.id}",
+                    user_name=sendUser.user_name,
                     content=msg.content,
-                    created_time=newCreatedTime,
                     reactions=newReactions,
+                    created_time=f"{msg.created_time}",
                 )
             )
 
