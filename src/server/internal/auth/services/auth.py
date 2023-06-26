@@ -63,4 +63,7 @@ class AuthService(auth_service_pb2_grpc.AuthServiceServicer):
 
         await jwt_blacklist.JWTBlacklist.create(token=auth_token)
 
+        # NOTE: Decrease the number of clients
+        await server.server.clientPool.remove(user_id=context.user_id)
+
         return auth_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()

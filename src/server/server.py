@@ -20,11 +20,34 @@ JWT_SECRET_KEY: str = env.str("JWT_SECRET_KEY")
 DB_CONNECTION_STRING: str = env.str("DB_CONNECTION_STRING")
 
 
-class Server:
-    clients: set
+class ClientPool:
+    lock: asyncio.Lock
+    clients: set[str]
 
     def __init__(self):
+        self.lock = asyncio.Lock()
         self.clients = set()
+
+    async def add(self, user_id: str):
+        await self.lock.acquire()
+
+        self.clients.add(user_id)
+
+        self.lock.release()
+
+    async def remove(self, user_id: str):
+        await self.lock.acquire()
+
+        self.clients.remove(user_id)
+
+        self.lock.release()
+
+
+class Server:
+    clientPool: ClientPool
+
+    def __init__(self):
+        self.clientPool = ClientPool()
 
 
 async def serve():

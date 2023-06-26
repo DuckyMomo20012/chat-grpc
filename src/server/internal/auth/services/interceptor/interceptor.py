@@ -2,6 +2,7 @@ import jwt
 
 import src.server.internal.auth.entities.jwt_blacklist as jwt_blacklist
 import src.server.internal.auth.entities.user as user
+import src.server.server as server
 import src.shared.interceptor.base_interceptor as base_interceptor
 import src.shared.interceptor.custom_context as custom_context
 
@@ -55,6 +56,9 @@ class JWTAuthInterceptor(base_interceptor.BaseInterceptor):
 
             # NOTE: Construct a new context with the extra_context
             context = custom_context.CustomContext(context, extra_context)
+
+            # NOTE: Increase the number of clients
+            await server.server.clientPool.add(user_id=userId)
 
         # NOTE: The ExpiredSignatureError MUST be caught before the InvalidTokenError
         except jwt.ExpiredSignatureError:
