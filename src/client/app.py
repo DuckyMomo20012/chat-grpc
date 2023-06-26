@@ -6,6 +6,7 @@ import grpc
 
 import pkg.protobuf.auth_service.auth_service_pb2_grpc as auth_service_pb2_grpc
 import pkg.protobuf.chat_service.chat_service_pb2_grpc as chat_service_pb2_grpc
+import src.client.interceptor.token_interceptor as token_interceptor
 from cli import env
 from src.shared.pages.base import BasePage
 
@@ -29,7 +30,12 @@ class Client:
         self.channel.close()
 
     def connect(self):
+        interceptors = [token_interceptor.TokenInterceptor()]
+
         self.channel = grpc.insecure_channel(f"{SERVER_HOST}:{PORT}")
+
+        self.channel = grpc.intercept_channel(self.channel, *interceptors)
+
         self.authServiceStub = auth_service_pb2_grpc.AuthServiceStub(self.channel)
         self.chatServiceStub = chat_service_pb2_grpc.ChatServiceStub(self.channel)
 
