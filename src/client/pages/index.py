@@ -77,6 +77,19 @@ class IndexPage(BasePage):
                             user_data={"message_id": msg.msg.message_id},
                         )
 
-            with dpg.group(horizontal=True, tag="w_send_message"):
-                dpg.add_input_text(hint="Send message...", width=-110)
-                dpg.add_button(label="Send", width=100)
+            with dpg.group(horizontal=True):
+                dpg.add_input_text(
+                    hint="Send message...", tag="f_send_message", width=-110
+                )
+
+                def handleSend(sender, app_data, user_data):
+                    try:
+                        app.app.client.chatServiceStub.Send(
+                            chat_service_pb2.SendRequest(
+                                content=dpg.get_value("f_send_message"),
+                            )
+                        )
+                    except grpc.RpcError:
+                        ErrorWindow("Cannot send message")
+
+                dpg.add_button(label="Send", callback=handleSend, width=100)
