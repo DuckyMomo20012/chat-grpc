@@ -4,6 +4,7 @@ from google.protobuf.timestamp_pb2 import Timestamp
 import pkg.protobuf.chat_service.chat_service_pb2 as chat_service_pb2
 import pkg.protobuf.chat_service.chat_service_pb2_grpc as chat_service_pb2_grpc
 import src.server.internal.chat.entities.event as event
+import src.server.internal.chat.entities.event_queue as event_queue
 import src.server.internal.chat.entities.message as message
 
 
@@ -74,6 +75,35 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
                     reactions=newReactions,
                 )
             )
+
+    async def Subscribe(self, request_iterator, context):
+        async for request in request_iterator:
+            if hasattr(request, "event_id"):
+                # NOTE: Client has responded that the event has been received,
+                # so we can remove it from the queue with the event_id from the
+                # request and the user_id from the context
+
+                await event_queue.EventQueue.filter(
+                    event_id=request.event_id, user_id=context.user_id
+                ).delete()
+
+            # NOTE: Broadcast the event to the client
+            eventQueue = await event_queue.EventQueue.filter(
+                user_id=context.user_id, is_sent=False
+            ).all()
+
+            for eventRecord in eventQueue:
+                newEvent = await event.Event.get(id=eventRecord.event_id)
+
+                eventRecord.update_from_dict({"is_sent": True})
+                await eventRecord.save()
+
+                yield chat_service_pb2.SubscribeResponse(
+                    event_id=f"{newEvent.id}",
+                    type=newEvent.type,
+                    user_id=f"{newEvent.user_id}",
+                    object_id=f"{newEvent.object_id}",
+                )
 
     async def HealthCheck(self, request, context):
         return chat_service_pb2.HealthCheckResponse(status="ok")
