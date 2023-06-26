@@ -36,11 +36,12 @@ class Client:
 
 class App:
     histories: list[Union[int, str]]
+    accessToken: str
     client: Client
 
     def __init__(self):
         self.histories = []
-
+        self.accessToken = None
         self.client = Client()
 
     def goto(self, page: BasePage):
@@ -63,7 +64,7 @@ app = App()
 
 
 def main():
-    from src.client.pages.index import IndexPage
+    from src.client.pages.auth import AuthPage
 
     logging.basicConfig()
 
@@ -77,7 +78,7 @@ def main():
 
     dpg.bind_font(default_font)
 
-    app.goto(IndexPage())
+    app.goto(AuthPage())
 
     dpg.setup_dearpygui()
     dpg.show_viewport()
