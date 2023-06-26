@@ -64,6 +64,7 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
 
                 newReactions.append(
                     chat_service_pb2.Reaction(
+                        user_id=f"{reactionUser.id}",
                         user_name=f"{reactionUser.user_name}",
                     )
                 )
@@ -71,6 +72,7 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
             yield chat_service_pb2.FetchResponse(
                 msg=chat_service_pb2.Message(
                     message_id=f"{msg.id}",
+                    user_id=f"{msg.user_id}",
                     user_name=sendUser.user_name,
                     content=msg.content,
                     reactions=newReactions,
