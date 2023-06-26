@@ -42,11 +42,13 @@ class Client:
 
 class App:
     histories: list[Union[int, str]]
+    userId: str
     accessToken: str
     client: Client
 
     def __init__(self):
         self.histories = []
+        self.userId = None
         self.accessToken = None
         self.client = Client()
 

@@ -32,6 +32,8 @@ class AuthPage(BasePage):
             response = app.app.client.authServiceStub.SignIn(
                 auth_service_pb2.SignInRequest(user_name=username, password=password)
             )
+
+            app.app.userId = response.user_id
             app.app.accessToken = response.access_token
 
             # NOTE: Go to the index page
