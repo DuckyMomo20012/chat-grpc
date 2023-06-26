@@ -6,7 +6,11 @@ import dearpygui.dearpygui as dpg
 import grpc
 
 import pkg.protobuf.chat_service.chat_service_pb2_grpc as chat_service_pb2_grpc
+from cli import env
 from src.shared.pages.base import BasePage
+
+PORT: int = env.int("PORT", 9000)
+SERVER_HOST: str = env.str("SERVER_HOST", "localhost")
 
 
 class Client:
@@ -18,7 +22,7 @@ class Client:
         asyncio.run(self.connect())
 
     async def connect(self):
-        async with grpc.aio.insecure_channel("localhost:9000") as channel:
+        async with grpc.aio.insecure_channel(f"{SERVER_HOST}:{PORT}") as channel:
             self.chatServiceStub = chat_service_pb2_grpc.ChatServiceStub(channel)
 
 
