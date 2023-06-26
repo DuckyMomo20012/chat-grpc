@@ -1,4 +1,3 @@
-import asyncio
 import logging
 from typing import Union
 
@@ -15,19 +14,24 @@ SERVER_HOST: str = env.str("SERVER_HOST", "localhost")
 
 
 class Client:
+    channel: grpc.Channel
     authServiceStub: auth_service_pb2_grpc.AuthServiceStub
     chatServiceStub: chat_service_pb2_grpc.ChatServiceStub
 
     def __init__(self):
+        self.channel = None
         self.userServiceStub = None
         self.chatServiceStub = None
 
-        asyncio.run(self.connect())
+        self.connect()
 
-    async def connect(self):
-        async with grpc.aio.insecure_channel(f"{SERVER_HOST}:{PORT}") as channel:
-            self.authServiceStub = auth_service_pb2_grpc.AuthServiceStub(channel)
-            self.chatServiceStub = chat_service_pb2_grpc.ChatServiceStub(channel)
+    def __del__(self):
+        self.channel.close()
+
+    def connect(self):
+        self.channel = grpc.insecure_channel(f"{SERVER_HOST}:{PORT}")
+        self.authServiceStub = auth_service_pb2_grpc.AuthServiceStub(self.channel)
+        self.chatServiceStub = chat_service_pb2_grpc.ChatServiceStub(self.channel)
 
 
 class App:
