@@ -88,8 +88,14 @@ class IndexPage(BasePage):
                             except grpc.RpcError:
                                 ErrorWindow("User already liked this message")
 
+                        isReacted = any(
+                            reaction.user_id == app.app.userId
+                            for reaction in msg.msg.reactions
+                        )
+
                         dpg.add_button(
-                            label="Like",
+                            label="Like" if not isReacted else "Liked",
+                            enabled=not isReacted,
                             callback=handleReact,
                             # NOTE: A hack to prevent the late binding problem,
                             # that the message id is always the last message id
