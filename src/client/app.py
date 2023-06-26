@@ -5,6 +5,7 @@ from typing import Union
 import dearpygui.dearpygui as dpg
 import grpc
 
+import pkg.protobuf.auth_service.auth_service_pb2_grpc as auth_service_pb2_grpc
 import pkg.protobuf.chat_service.chat_service_pb2_grpc as chat_service_pb2_grpc
 from cli import env
 from src.shared.pages.base import BasePage
@@ -14,15 +15,18 @@ SERVER_HOST: str = env.str("SERVER_HOST", "localhost")
 
 
 class Client:
+    authServiceStub: auth_service_pb2_grpc.AuthServiceStub
     chatServiceStub: chat_service_pb2_grpc.ChatServiceStub
 
     def __init__(self):
+        self.userServiceStub = None
         self.chatServiceStub = None
 
         asyncio.run(self.connect())
 
     async def connect(self):
         async with grpc.aio.insecure_channel(f"{SERVER_HOST}:{PORT}") as channel:
+            self.authServiceStub = auth_service_pb2_grpc.AuthServiceStub(channel)
             self.chatServiceStub = chat_service_pb2_grpc.ChatServiceStub(channel)
 
 
