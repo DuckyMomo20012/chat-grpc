@@ -17,6 +17,10 @@ class IndexPage(BasePage):
 
         self.fetchMessages()
 
+    def refresh(self):
+        self.fetchMessages()
+        super().reload()
+
     def fetchMessages(self):
         try:
             self.messages = app.app.client.chatServiceStub.Fetch(
@@ -89,6 +93,9 @@ class IndexPage(BasePage):
                                 content=dpg.get_value("f_send_message"),
                             )
                         )
+
+                        # NOTE: Reload the window to update the messages
+                        self.refresh()
                     except grpc.RpcError:
                         ErrorWindow("Cannot send message")
 
