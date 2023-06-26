@@ -9,7 +9,7 @@ service ChatService {
     rpc Send(SendRequest) returns (google.protobuf.Empty) {}
     rpc React(ReactionRequest) returns (google.protobuf.Empty) {}
     rpc Fetch(google.protobuf.Empty) returns (stream FetchResponse) {}
-    rpc Subscribe(google.protobuf.Empty) returns (stream SubscribeResponse) {}
+    rpc Subscribe(stream SubscribeRequest) returns (stream SubscribeResponse) {}
     rpc HealthCheck(google.protobuf.Empty) returns (HealthCheckResponse) {}
 }
 
@@ -36,15 +36,15 @@ message FetchResponse {
     Message msg = 1;
 }
 
-enum SubscribeResponseType {
-    MESSAGE = 0;
-    REACTION = 1;
+message SubscribeRequest {
+    optional string event_id = 1;
 }
 
 message SubscribeResponse {
-    SubscribeResponseType type = 1;
-    string user_id = 2;
-    string object_id = 3;
+    optional string event_id = 1;
+    optional string type = 2;
+    optional string user_id = 3;
+    optional string object_id = 4;
 }
 
 message HealthCheckResponse {
