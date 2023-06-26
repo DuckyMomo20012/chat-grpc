@@ -1,0 +1,12 @@
+# buf.gen.yaml
+version: v1
+managed:
+  enabled: true
+plugins:
+  - plugin: buf.build/grpc/python:v1.56.0
+    # NOTE: We have to nest folders so the relative imports work. Don't set to
+    # ../pkg/protobuf, otherwise the imports will be broken.
+    out: ../
+  # dependencies
+  - plugin: buf.build/protocolbuffers/python
+    out: ../

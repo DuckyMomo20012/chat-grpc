@@ -17,3 +17,4 @@ repos:
         files: ^poetry.lock$
       - id: poetry-export
         args: ["-f", "requirements.txt", "-o", "requirements.txt"]
+exclude: ^pkg/.*$

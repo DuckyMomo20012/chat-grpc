@@ -5,12 +5,13 @@ description = "A simple python template"
 authors = ["Duong Vinh <tienvinh.duong4@gmail.com>"]
 
 [tool.poe.tasks]
-dev = "python app.py"
+dev = "python cli.py"
 lint = "flake8"
 "sort_import" = "isort ."
 pretty = "black ."
 test = "echo You are running test command"
 deploy = "echo You are running deploy command"
+"demo" = "python demo.py"
 
 [tool.isort]
 profile = "black"
@@ -22,6 +23,14 @@ ignore_missing_imports = true
 [tool.poetry.dependencies]
 python = "^3.11"
 environs = "^9.5.0"
+typer = "^0.7.0"
+dearpygui = "^1.9.0"
+grpcio = "^1.54.2"
+protobuf = "^4.23.3"
+pydantic = "^1.10.9"
+tortoise-orm = {extras = ["asyncpg"], version = "^0.19.3"}
+grpc-interceptor = "^0.15.2"
+pyjwt = "^2.7.0"
 
 [tool.poetry.group.dev.dependencies]
 poethepoet = "^0.20.0"
@@ -31,6 +40,7 @@ flake8 = "^6.0.0"
 mypy = "^1.0.0"
 pre-commit = "^3.0.4"
 poetry-pre-commit-plugin = "^0.1.2"
+types-protobuf = "^4.23.0.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
