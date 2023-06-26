@@ -4,6 +4,7 @@ from typing import Union
 import dearpygui.dearpygui as dpg
 import grpc
 
+import pkg.protobuf.auth_service.auth_service_pb2 as auth_service_pb2
 import pkg.protobuf.chat_service.chat_service_pb2 as chat_service_pb2
 import src.client.app as app
 from src.shared.pages.base import BasePage
@@ -21,6 +22,16 @@ class IndexPage(BasePage):
         self.fetchMessages()
         super().reload()
 
+    def signOut(self):
+        try:
+            app.app.client.authServiceStub.SignOut(
+                auth_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
+            )
+            app.app.accessToken = None
+            app.app.back()
+        except grpc.RpcError:
+            ErrorWindow("Cannot sign out")
+
     def fetchMessages(self):
         try:
             self.messages = app.app.client.chatServiceStub.Fetch(
@@ -31,6 +42,10 @@ class IndexPage(BasePage):
 
     def render(self):
         with dpg.window(label="Inbox", tag=self.tag, width=400, height=200):
+            with dpg.menu_bar():
+                dpg.add_menu_item(label="Refresh", callback=self.refresh)
+                dpg.add_menu_item(label="Sign out", callback=self.signOut)
+
             with dpg.child_window(autosize_x=True, height=-40, border=True):
                 for msg in self.messages:
                     with dpg.group(horizontal=True):
