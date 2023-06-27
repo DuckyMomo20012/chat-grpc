@@ -87,7 +87,7 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
 
     async def Subscribe(self, request_iterator, context):
         async for request in request_iterator:
-            if hasattr(request, "event_id"):
+            if request.event_id:
                 # NOTE: Client has responded that the event has been received,
                 # so we can remove it from the queue with the event_id from the
                 # request and the user_id from the context
