@@ -20,15 +20,25 @@ class ChatServiceStub(object):
                 request_serializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.SendRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
+        self.GetMessage = channel.unary_unary(
+                '/chat.v1.ChatService/GetMessage',
+                request_serializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.GetMessageRequest.SerializeToString,
+                response_deserializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.Message.FromString,
+                )
         self.React = channel.unary_unary(
                 '/chat.v1.ChatService/React',
                 request_serializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.ReactionRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
+        self.GetReaction = channel.unary_unary(
+                '/chat.v1.ChatService/GetReaction',
+                request_serializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.GetReactionRequest.SerializeToString,
+                response_deserializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.Reaction.FromString,
+                )
         self.Fetch = channel.unary_stream(
                 '/chat.v1.ChatService/Fetch',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.FetchResponse.FromString,
+                response_deserializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.Message.FromString,
                 )
         self.Subscribe = channel.unary_stream(
                 '/chat.v1.ChatService/Subscribe',
@@ -51,7 +61,19 @@ class ChatServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetMessage(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def React(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetReaction(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -83,15 +105,25 @@ def add_ChatServiceServicer_to_server(servicer, server):
                     request_deserializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.SendRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
+            'GetMessage': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetMessage,
+                    request_deserializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.GetMessageRequest.FromString,
+                    response_serializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.Message.SerializeToString,
+            ),
             'React': grpc.unary_unary_rpc_method_handler(
                     servicer.React,
                     request_deserializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.ReactionRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
+            'GetReaction': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetReaction,
+                    request_deserializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.GetReactionRequest.FromString,
+                    response_serializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.Reaction.SerializeToString,
+            ),
             'Fetch': grpc.unary_stream_rpc_method_handler(
                     servicer.Fetch,
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                    response_serializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.FetchResponse.SerializeToString,
+                    response_serializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.Message.SerializeToString,
             ),
             'Subscribe': grpc.unary_stream_rpc_method_handler(
                     servicer.Subscribe,
@@ -131,6 +163,23 @@ class ChatService(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
+    def GetMessage(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/chat.v1.ChatService/GetMessage',
+            pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.GetMessageRequest.SerializeToString,
+            pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.Message.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
     def React(request,
             target,
             options=(),
@@ -148,6 +197,23 @@ class ChatService(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
+    def GetReaction(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/chat.v1.ChatService/GetReaction',
+            pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.GetReactionRequest.SerializeToString,
+            pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.Reaction.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
     def Fetch(request,
             target,
             options=(),
@@ -160,7 +226,7 @@ class ChatService(object):
             metadata=None):
         return grpc.experimental.unary_stream(request, target, '/chat.v1.ChatService/Fetch',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.FetchResponse.FromString,
+            pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.Message.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

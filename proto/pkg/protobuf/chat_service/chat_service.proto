@@ -7,8 +7,10 @@ import "google/protobuf/empty.proto";
 
 service ChatService {
     rpc Send(SendRequest) returns (google.protobuf.Empty) {}
+    rpc GetMessage(GetMessageRequest) returns (Message) {}
     rpc React(ReactionRequest) returns (google.protobuf.Empty) {}
-    rpc Fetch(google.protobuf.Empty) returns (stream FetchResponse) {}
+    rpc GetReaction(GetReactionRequest) returns (Reaction) {}
+    rpc Fetch(google.protobuf.Empty) returns (stream Message) {}
     rpc Subscribe(SubscribeRequest) returns (stream SubscribeResponse) {}
     rpc HealthCheck(google.protobuf.Empty) returns (HealthCheckResponse) {}
 }
@@ -17,13 +19,22 @@ message SendRequest {
     string content = 1;
 }
 
+message GetMessageRequest {
+    string message_id = 1;
+}
+
 message ReactionRequest {
     string message_id = 1;
+}
+
+message GetReactionRequest {
+    string reaction_id = 1;
 }
 
 message Reaction {
     string user_id = 1;
     string user_name = 2;
+    string message_content = 3;
 }
 
 message Message {
@@ -33,10 +44,6 @@ message Message {
     string content = 4;
     repeated Reaction reactions = 5;
     string created_time = 6;
-}
-
-message FetchResponse {
-    Message msg = 1;
 }
 
 message SubscribeRequest {

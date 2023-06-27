@@ -10,6 +10,7 @@ import src.client.app as app
 import src.client.listener.event as eventListener
 from src.shared.pages.base import BasePage
 from src.shared.pages.error import ErrorWindow
+from src.shared.pages.popup import PopupWindow
 
 
 def handleEventListener(page: BasePage, event: chat_service_pb2.SubscribeResponse):
@@ -17,7 +18,16 @@ def handleEventListener(page: BasePage, event: chat_service_pb2.SubscribeRespons
         page.refresh()
 
     elif event.type == "EventType.REACTION":
-        pass
+        reaction = app.app.client.chatServiceStub.GetReaction(
+            chat_service_pb2.GetReactionRequest(reaction_id=event.object_id)
+        )
+        if reaction:
+            PopupWindow(
+                f"{reaction.user_name} reacted to your message:"
+                f" {reaction.message_content}",
+                label="Notification",
+            )
+
     else:
         # Event type is unknown, so we just refresh the page
         page.refresh()
@@ -76,17 +86,17 @@ class IndexPage(BasePage):
 
                         with dpg.tooltip(dpg.last_item()):
                             parsedTime = datetime.strptime(
-                                msg.msg.created_time, "%Y-%m-%d %H:%M:%S.%f%z"
+                                msg.created_time, "%Y-%m-%d %H:%M:%S.%f%z"
                             ).strftime("%Y-%m-%d %H:%M:%S")
 
                             dpg.add_text(f"Sent time: {parsedTime}")
 
-                        dpg.add_text(f"{msg.msg.user_name}" + ":")
+                        dpg.add_text(f"{msg.user_name}" + ":")
 
-                        if msg.msg.user_id == app.app.userId:
+                        if msg.user_id == app.app.userId:
                             dpg.configure_item(dpg.last_item(), color=(0, 255, 0))
 
-                        dpg.add_text(f"{msg.msg.content}")
+                        dpg.add_text(f"{msg.content}")
 
                         dpg.add_button(label="<3")
 
@@ -94,7 +104,7 @@ class IndexPage(BasePage):
                             dpg.last_item(), mousebutton=dpg.mvMouseButton_Left
                         ):
                             reactionUsers = ", ".join(
-                                [reaction.user_name for reaction in msg.msg.reactions]
+                                [reaction.user_name for reaction in msg.reactions]
                             )
                             if not reactionUsers:
                                 dpg.add_text("No likes yet")
@@ -116,7 +126,7 @@ class IndexPage(BasePage):
 
                         isReacted = any(
                             reaction.user_id == app.app.userId
-                            for reaction in msg.msg.reactions
+                            for reaction in msg.reactions
                         )
 
                         dpg.add_button(
@@ -125,7 +135,7 @@ class IndexPage(BasePage):
                             callback=handleReact,
                             # NOTE: A hack to prevent the late binding problem,
                             # that the message id is always the last message id
-                            user_data={"message_id": msg.msg.message_id},
+                            user_data={"message_id": msg.message_id},
                         )
 
             # NOTE: Scroll to the bottom
