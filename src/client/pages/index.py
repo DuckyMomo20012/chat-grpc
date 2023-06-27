@@ -67,7 +67,9 @@ class IndexPage(BasePage):
                 dpg.add_menu_item(label="Refresh", callback=self.refresh)
                 dpg.add_menu_item(label="Sign out", callback=self.signOut)
 
-            with dpg.child_window(autosize_x=True, height=-40, border=True):
+            with dpg.child_window(
+                tag="w_inbox", autosize_x=True, height=-40, border=True
+            ):
                 for msg in self.messages:
                     with dpg.group(horizontal=True):
                         dpg.add_button(label="i")
@@ -125,6 +127,9 @@ class IndexPage(BasePage):
                             # that the message id is always the last message id
                             user_data={"message_id": msg.msg.message_id},
                         )
+
+            # NOTE: Scroll to the bottom
+            dpg.set_y_scroll("w_inbox", -1)
 
             with dpg.group(horizontal=True):
                 dpg.add_input_text(
