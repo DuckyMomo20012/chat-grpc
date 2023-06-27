@@ -57,7 +57,7 @@ class AuthPage(BasePage):
 
     def render(self):
         with dpg.window(label="Sign in", tag=self.tag, width=400, height=200):
-            dpg.add_text("Welcome Chat App!")
+            dpg.add_text("Welcome to Chat App!")
 
             dpg.add_input_text(hint="Username", tag="f_username")
             dpg.add_input_text(hint="Password", tag="f_password", password=True)
