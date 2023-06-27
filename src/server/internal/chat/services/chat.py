@@ -1,4 +1,5 @@
 import grpc
+import tortoise.exceptions
 
 import pkg.protobuf.chat_service.chat_service_pb2 as chat_service_pb2
 import pkg.protobuf.chat_service.chat_service_pb2_grpc as chat_service_pb2_grpc
@@ -30,6 +31,47 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
 
         return chat_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
 
+    async def GetMessage(self, request, context):
+        userId = context.user_id
+
+        if not request.message_id:
+            context.set_details("Message ID is empty")
+            context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            return chat_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
+
+        msg = await message.Message.filter(
+            id=request.message_id, user_id=userId
+        ).first()
+
+        if not msg:
+            context.set_details("Message not found")
+            context.set_code(grpc.StatusCode.NOT_FOUND)
+            return chat_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
+
+        sendUser = await user.User.get(id=msg.user_id)
+
+        reactions = await msg.reactions.all()
+
+        newReactions = []
+        for reaction in reactions:
+            reactionUser = await user.User.get(id=reaction.user_id)
+
+            newReactions.append(
+                chat_service_pb2.Reaction(
+                    user_id=f"{reactionUser.id}",
+                    user_name=f"{reactionUser.user_name}",
+                )
+            )
+
+        return chat_service_pb2.Message(
+            message_id=f"{msg.id}",
+            user_id=f"{msg.user_id}",
+            user_name=sendUser.user_name,
+            content=msg.content,
+            reactions=newReactions,
+            created_time=f"{msg.created_time}",
+        )
+
     async def React(self, request, context):
         userId = context.user_id
 
@@ -54,6 +96,25 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
         )
 
         return chat_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
+
+    async def GetReaction(self, request, context):
+        if not request.reaction_id:
+            context.set_details("Reaction ID is empty")
+            context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            return chat_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
+
+        try:
+            reaction = await message.Reaction.get(id=request.reaction_id)
+            reactionUser = await user.User.get(id=reaction.user_id)
+
+            return chat_service_pb2.Reaction(
+                user_id=f"{reactionUser.id}",
+                user_name=f"{reactionUser.user_name}",
+            )
+        except tortoise.exceptions.DoesNotExist:
+            context.set_details("Reaction not found")
+            context.set_code(grpc.StatusCode.NOT_FOUND)
+            return chat_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
 
     async def Fetch(self, request, context):
         messages = await message.Message.all()

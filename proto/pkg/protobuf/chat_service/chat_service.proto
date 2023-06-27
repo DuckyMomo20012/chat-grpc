@@ -7,7 +7,9 @@ import "google/protobuf/empty.proto";
 
 service ChatService {
     rpc Send(SendRequest) returns (google.protobuf.Empty) {}
+    rpc GetMessage(GetMessageRequest) returns (Message) {}
     rpc React(ReactionRequest) returns (google.protobuf.Empty) {}
+    rpc GetReaction(GetReactionRequest) returns (Reaction) {}
     rpc Fetch(google.protobuf.Empty) returns (stream Message) {}
     rpc Subscribe(SubscribeRequest) returns (stream SubscribeResponse) {}
     rpc HealthCheck(google.protobuf.Empty) returns (HealthCheckResponse) {}
@@ -17,8 +19,16 @@ message SendRequest {
     string content = 1;
 }
 
+message GetMessageRequest {
+    string message_id = 1;
+}
+
 message ReactionRequest {
     string message_id = 1;
+}
+
+message GetReactionRequest {
+    string reaction_id = 1;
 }
 
 message Reaction {
