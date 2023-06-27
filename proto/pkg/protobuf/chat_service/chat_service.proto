@@ -22,15 +22,17 @@ message ReactionRequest {
 }
 
 message Reaction {
-    string user_name = 1;
+    string user_id = 1;
+    string user_name = 2;
 }
 
 message Message {
     string message_id = 1;
-    string user_name = 2;
-    string content = 3;
-    repeated Reaction reactions = 4;
-    string created_time = 5;
+    string user_id = 2;
+    string user_name = 3;
+    string content = 4;
+    repeated Reaction reactions = 5;
+    string created_time = 6;
 }
 
 message FetchResponse {

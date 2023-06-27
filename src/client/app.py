@@ -1,5 +1,4 @@
 import logging
-from typing import Union
 
 import dearpygui.dearpygui as dpg
 import grpc
@@ -41,29 +40,37 @@ class Client:
 
 
 class App:
-    histories: list[Union[int, str]]
+    histories: list[BasePage]
+    userId: str
     accessToken: str
     client: Client
 
     def __init__(self):
         self.histories = []
+        self.userId = None
         self.accessToken = None
         self.client = Client()
 
     def goto(self, page: BasePage):
-        if len(self.histories) > 0:
-            dpg.configure_item(self.histories[-1], show=False)
-        page.render()
-        # NOTE: Tag can be re-assigned while rendering
-        self.histories.append(page.tag)
+        try:
+            if len(self.histories) > 0:
+                dpg.configure_item(self.histories[-1].tag, show=False)
+            page.render()
+            # NOTE: Tag can be re-assigned while rendering
+            self.histories.append(page)
 
-        dpg.set_primary_window(page.tag, True)
+            dpg.set_primary_window(page.tag, True)
+        except SystemError:
+            print(
+                "RuntimeError: Cannot set primary window. Please check if the window is"
+                " created with self.tag"
+            )
 
     def back(self):
         if len(self.histories) > 1:
             prevPage = self.histories.pop()
-            dpg.delete_item(prevPage)
-            dpg.configure_item(self.histories[-1], show=True)
+            prevPage.__del__()
+            dpg.configure_item(self.histories[-1].tag, show=True)
 
 
 app = App()

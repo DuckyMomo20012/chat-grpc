@@ -60,6 +60,9 @@ class IndexPage(BasePage):
 
                         dpg.add_text(f"{msg.msg.user_name}" + ":")
 
+                        if msg.msg.user_id == app.app.userId:
+                            dpg.configure_item(dpg.last_item(), color=(0, 255, 0))
+
                         dpg.add_text(f"{msg.msg.content}")
 
                         dpg.add_button(label="<3")
@@ -88,8 +91,14 @@ class IndexPage(BasePage):
                             except grpc.RpcError:
                                 ErrorWindow("User already liked this message")
 
+                        isReacted = any(
+                            reaction.user_id == app.app.userId
+                            for reaction in msg.msg.reactions
+                        )
+
                         dpg.add_button(
-                            label="Like",
+                            label="Like" if not isReacted else "Liked",
+                            enabled=not isReacted,
                             callback=handleReact,
                             # NOTE: A hack to prevent the late binding problem,
                             # that the message id is always the last message id
@@ -103,9 +112,14 @@ class IndexPage(BasePage):
 
                 def handleSend(sender, app_data, user_data):
                     try:
+                        messageContent = dpg.get_value("f_send_message")
+
+                        if not messageContent:
+                            raise ValueError("Message cannot be empty")
+
                         app.app.client.chatServiceStub.Send(
                             chat_service_pb2.SendRequest(
-                                content=dpg.get_value("f_send_message"),
+                                content=messageContent,
                             )
                         )
 
@@ -113,5 +127,7 @@ class IndexPage(BasePage):
                         self.refresh()
                     except grpc.RpcError:
                         ErrorWindow("Cannot send message")
+                    except ValueError as e:
+                        ErrorWindow(str(e))
 
                 dpg.add_button(label="Send", callback=handleSend, width=100)

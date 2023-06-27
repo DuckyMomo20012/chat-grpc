@@ -12,6 +12,11 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
     async def Send(self, request, context):
         userId = context.user_id
 
+        if not request.content:
+            context.set_details("Content is empty")
+            context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            return chat_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
+
         newMessage = await message.Message.create(
             user_id=userId, content=request.content
         )
@@ -64,6 +69,7 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
 
                 newReactions.append(
                     chat_service_pb2.Reaction(
+                        user_id=f"{reactionUser.id}",
                         user_name=f"{reactionUser.user_name}",
                     )
                 )
@@ -71,6 +77,7 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
             yield chat_service_pb2.FetchResponse(
                 msg=chat_service_pb2.Message(
                     message_id=f"{msg.id}",
+                    user_id=f"{msg.user_id}",
                     user_name=sendUser.user_name,
                     content=msg.content,
                     reactions=newReactions,
@@ -80,7 +87,7 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
 
     async def Subscribe(self, request_iterator, context):
         async for request in request_iterator:
-            if hasattr(request, "event_id"):
+            if request.event_id:
                 # NOTE: Client has responded that the event has been received,
                 # so we can remove it from the queue with the event_id from the
                 # request and the user_id from the context
