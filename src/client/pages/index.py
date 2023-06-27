@@ -55,6 +55,9 @@ class IndexPage(BasePage):
 
     def signOut(self):
         try:
+            # NOTE: Stop event listener
+            self.listener.stop()
+
             app.app.client.authServiceStub.SignOut(
                 auth_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
             )
