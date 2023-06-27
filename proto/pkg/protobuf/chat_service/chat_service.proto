@@ -9,7 +9,7 @@ service ChatService {
     rpc Send(SendRequest) returns (google.protobuf.Empty) {}
     rpc React(ReactionRequest) returns (google.protobuf.Empty) {}
     rpc Fetch(google.protobuf.Empty) returns (stream FetchResponse) {}
-    rpc Subscribe(stream SubscribeRequest) returns (stream SubscribeResponse) {}
+    rpc Subscribe(SubscribeRequest) returns (stream SubscribeResponse) {}
     rpc HealthCheck(google.protobuf.Empty) returns (HealthCheckResponse) {}
 }
 

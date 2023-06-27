@@ -7,8 +7,25 @@ import grpc
 import pkg.protobuf.auth_service.auth_service_pb2 as auth_service_pb2
 import pkg.protobuf.chat_service.chat_service_pb2 as chat_service_pb2
 import src.client.app as app
+import src.client.listener.event as eventListener
 from src.shared.pages.base import BasePage
 from src.shared.pages.error import ErrorWindow
+
+
+def handleEventListener(page: BasePage, event: chat_service_pb2.SubscribeResponse):
+    if event.type == "EventType.MESSAGE":
+        page.refresh()
+
+    elif event.type == "EventType.REACTION":
+        pass
+    else:
+        # Event type is unknown, so we just refresh the page
+        page.refresh()
+
+    # NOTE: Send back the last event id to the server, so the server
+    # acknowledges that we have received the event, and the server will
+    # delete the event from the queue
+    return chat_service_pb2.SubscribeRequest(event_id=event.event_id)
 
 
 class IndexPage(BasePage):
@@ -18,9 +35,13 @@ class IndexPage(BasePage):
 
         self.fetchMessages()
 
+        # NOTE: Add event listener
+        self.listener = eventListener.EventListener()
+        self.listener.addEventListener(self, handleEventListener)
+
     def refresh(self):
         self.fetchMessages()
-        super().reload()
+        self.reload()
 
     def signOut(self):
         try:
@@ -46,7 +67,9 @@ class IndexPage(BasePage):
                 dpg.add_menu_item(label="Refresh", callback=self.refresh)
                 dpg.add_menu_item(label="Sign out", callback=self.signOut)
 
-            with dpg.child_window(autosize_x=True, height=-40, border=True):
+            with dpg.child_window(
+                tag="w_inbox", autosize_x=True, height=-40, border=True
+            ):
                 for msg in self.messages:
                     with dpg.group(horizontal=True):
                         dpg.add_button(label="i")
@@ -105,6 +128,9 @@ class IndexPage(BasePage):
                             user_data={"message_id": msg.msg.message_id},
                         )
 
+            # NOTE: Scroll to the bottom
+            dpg.set_y_scroll("w_inbox", -1)
+
             with dpg.group(horizontal=True):
                 dpg.add_input_text(
                     hint="Send message...", tag="f_send_message", width=-110
@@ -123,8 +149,9 @@ class IndexPage(BasePage):
                             )
                         )
 
-                        # NOTE: Reload the window to update the messages
-                        self.refresh()
+                        # NOTE: DO NOT refresh the page here, because the event
+                        # listener will do it for us
+                        # self.refresh()
                     except grpc.RpcError:
                         ErrorWindow("Cannot send message")
                     except ValueError as e:
