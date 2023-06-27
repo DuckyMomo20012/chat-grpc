@@ -74,15 +74,13 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
                     )
                 )
 
-            yield chat_service_pb2.FetchResponse(
-                msg=chat_service_pb2.Message(
-                    message_id=f"{msg.id}",
-                    user_id=f"{msg.user_id}",
-                    user_name=sendUser.user_name,
-                    content=msg.content,
-                    reactions=newReactions,
-                    created_time=f"{msg.created_time}",
-                )
+            yield chat_service_pb2.Message(
+                message_id=f"{msg.id}",
+                user_id=f"{msg.user_id}",
+                user_name=sendUser.user_name,
+                content=msg.content,
+                reactions=newReactions,
+                created_time=f"{msg.created_time}",
             )
 
     async def Subscribe(self, request, context):

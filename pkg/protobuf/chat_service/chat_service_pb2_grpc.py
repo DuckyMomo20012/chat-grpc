@@ -28,7 +28,7 @@ class ChatServiceStub(object):
         self.Fetch = channel.unary_stream(
                 '/chat.v1.ChatService/Fetch',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.FetchResponse.FromString,
+                response_deserializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.Message.FromString,
                 )
         self.Subscribe = channel.unary_stream(
                 '/chat.v1.ChatService/Subscribe',
@@ -91,7 +91,7 @@ def add_ChatServiceServicer_to_server(servicer, server):
             'Fetch': grpc.unary_stream_rpc_method_handler(
                     servicer.Fetch,
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                    response_serializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.FetchResponse.SerializeToString,
+                    response_serializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.Message.SerializeToString,
             ),
             'Subscribe': grpc.unary_stream_rpc_method_handler(
                     servicer.Subscribe,
@@ -160,7 +160,7 @@ class ChatService(object):
             metadata=None):
         return grpc.experimental.unary_stream(request, target, '/chat.v1.ChatService/Fetch',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.FetchResponse.FromString,
+            pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.Message.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
