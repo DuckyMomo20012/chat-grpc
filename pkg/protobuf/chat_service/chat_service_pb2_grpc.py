@@ -30,7 +30,7 @@ class ChatServiceStub(object):
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
                 response_deserializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.FetchResponse.FromString,
                 )
-        self.Subscribe = channel.stream_stream(
+        self.Subscribe = channel.unary_stream(
                 '/chat.v1.ChatService/Subscribe',
                 request_serializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.SubscribeRequest.SerializeToString,
                 response_deserializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.SubscribeResponse.FromString,
@@ -63,7 +63,7 @@ class ChatServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def Subscribe(self, request_iterator, context):
+    def Subscribe(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -93,7 +93,7 @@ def add_ChatServiceServicer_to_server(servicer, server):
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                     response_serializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.FetchResponse.SerializeToString,
             ),
-            'Subscribe': grpc.stream_stream_rpc_method_handler(
+            'Subscribe': grpc.unary_stream_rpc_method_handler(
                     servicer.Subscribe,
                     request_deserializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.SubscribeRequest.FromString,
                     response_serializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.SubscribeResponse.SerializeToString,
@@ -165,7 +165,7 @@ class ChatService(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def Subscribe(request_iterator,
+    def Subscribe(request,
             target,
             options=(),
             channel_credentials=None,
@@ -175,7 +175,7 @@ class ChatService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.stream_stream(request_iterator, target, '/chat.v1.ChatService/Subscribe',
+        return grpc.experimental.unary_stream(request, target, '/chat.v1.ChatService/Subscribe',
             pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.SubscribeRequest.SerializeToString,
             pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.SubscribeResponse.FromString,
             options, channel_credentials,

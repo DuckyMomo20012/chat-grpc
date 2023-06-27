@@ -85,34 +85,33 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
                 )
             )
 
-    async def Subscribe(self, request_iterator, context):
-        async for request in request_iterator:
-            if request.event_id:
-                # NOTE: Client has responded that the event has been received,
-                # so we can remove it from the queue with the event_id from the
-                # request and the user_id from the context
+    async def Subscribe(self, request, context):
+        if request.event_id:
+            # NOTE: Client has responded that the event has been received,
+            # so we can remove it from the queue with the event_id from the
+            # request and the user_id from the context
 
-                await event_queue.EventQueue.filter(
-                    event_id=request.event_id, user_id=context.user_id
-                ).delete()
+            await event_queue.EventQueue.filter(
+                event_id=request.event_id, user_id=context.user_id
+            ).delete()
 
-            # NOTE: Broadcast the event to the client
-            eventQueue = await event_queue.EventQueue.filter(
-                user_id=context.user_id, is_sent=False
-            ).all()
+        # NOTE: Broadcast the event to the client
+        eventQueue = await event_queue.EventQueue.filter(
+            user_id=context.user_id, is_sent=False
+        ).all()
 
-            for eventRecord in eventQueue:
-                newEvent = await event.Event.get(id=eventRecord.event_id)
+        for eventRecord in eventQueue:
+            newEvent = await event.Event.get(id=eventRecord.event_id)
 
-                eventRecord.update_from_dict({"is_sent": True})
-                await eventRecord.save()
+            eventRecord.update_from_dict({"is_sent": True})
+            await eventRecord.save()
 
-                yield chat_service_pb2.SubscribeResponse(
-                    event_id=f"{newEvent.id}",
-                    type=newEvent.type,
-                    user_id=f"{newEvent.user_id}",
-                    object_id=f"{newEvent.object_id}",
-                )
+            yield chat_service_pb2.SubscribeResponse(
+                event_id=f"{newEvent.id}",
+                type=newEvent.type,
+                user_id=f"{newEvent.user_id}",
+                object_id=f"{newEvent.object_id}",
+            )
 
     async def HealthCheck(self, request, context):
         return chat_service_pb2.HealthCheckResponse(status="ok")
