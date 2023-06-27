@@ -77,6 +77,8 @@ class IndexPage(BasePage):
                 dpg.add_menu_item(label="Refresh", callback=self.refresh)
                 dpg.add_menu_item(label="Sign out", callback=self.signOut)
 
+            dpg.add_text("Username: " + app.app.userName, color=(255, 0, 255))
+
             with dpg.child_window(
                 tag="w_inbox", autosize_x=True, height=-40, border=True
             ):

@@ -34,6 +34,8 @@ class AuthPage(BasePage):
             )
 
             app.app.userId = response.user_id
+            # A little hacky, but less work to do just to get the username
+            app.app.userName = username
             app.app.accessToken = response.access_token
 
             # NOTE: Go to the index page
