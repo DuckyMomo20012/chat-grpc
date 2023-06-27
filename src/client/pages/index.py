@@ -55,6 +55,9 @@ class IndexPage(BasePage):
 
     def signOut(self):
         try:
+            # NOTE: Stop event listener
+            self.listener.stop()
+
             app.app.client.authServiceStub.SignOut(
                 auth_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
             )
@@ -76,6 +79,8 @@ class IndexPage(BasePage):
             with dpg.menu_bar():
                 dpg.add_menu_item(label="Refresh", callback=self.refresh)
                 dpg.add_menu_item(label="Sign out", callback=self.signOut)
+
+            dpg.add_text("Username: " + app.app.userName, color=(255, 0, 255))
 
             with dpg.child_window(
                 tag="w_inbox", autosize_x=True, height=-40, border=True

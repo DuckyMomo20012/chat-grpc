@@ -42,12 +42,14 @@ class Client:
 class App:
     histories: list[BasePage]
     userId: str
+    userName: str
     accessToken: str
     client: Client
 
     def __init__(self):
         self.histories = []
         self.userId = None
+        self.userName = None
         self.accessToken = None
         self.client = Client()
 

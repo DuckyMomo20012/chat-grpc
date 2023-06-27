@@ -42,6 +42,7 @@ class AuthService(auth_service_pb2_grpc.AuthServiceServicer):
         accessToken = jwt.encode(
             {
                 "user_id": f"{currUser.id}",
+                "user_name": currUser.user_name,
                 "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1),
             },
             server.JWT_SECRET_KEY,
