@@ -107,9 +107,12 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
             reaction = await message.Reaction.get(id=request.reaction_id)
             reactionUser = await user.User.get(id=reaction.user_id)
 
+            reactedMsg = await message.Message.get(id=reaction.message_id)
+
             return chat_service_pb2.Reaction(
                 user_id=f"{reactionUser.id}",
                 user_name=f"{reactionUser.user_name}",
+                message_content=reactedMsg.content,
             )
         except tortoise.exceptions.DoesNotExist:
             context.set_details("Reaction not found")
@@ -132,6 +135,7 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
                     chat_service_pb2.Reaction(
                         user_id=f"{reactionUser.id}",
                         user_name=f"{reactionUser.user_name}",
+                        message_content=msg.content,
                     )
                 )
 
