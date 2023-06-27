@@ -10,6 +10,7 @@ import src.client.app as app
 import src.client.listener.event as eventListener
 from src.shared.pages.base import BasePage
 from src.shared.pages.error import ErrorWindow
+from src.shared.pages.popup import PopupWindow
 
 
 def handleEventListener(page: BasePage, event: chat_service_pb2.SubscribeResponse):
@@ -17,7 +18,16 @@ def handleEventListener(page: BasePage, event: chat_service_pb2.SubscribeRespons
         page.refresh()
 
     elif event.type == "EventType.REACTION":
-        pass
+        reaction = app.app.client.chatServiceStub.GetReaction(
+            chat_service_pb2.GetReactionRequest(reaction_id=event.object_id)
+        )
+        if reaction:
+            PopupWindow(
+                f"{reaction.user_name} reacted to your message:"
+                f" {reaction.message_content}",
+                label="Notification",
+            )
+
     else:
         # Event type is unknown, so we just refresh the page
         page.refresh()
