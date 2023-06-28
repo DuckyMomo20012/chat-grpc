@@ -96,7 +96,7 @@ class IndexPage(BasePage):
                                 msg.created_time, "%Y-%m-%d %H:%M:%S.%f%z"
                             ).strftime("%Y-%m-%d %H:%M:%S")
 
-                            dpg.add_text(f"Sent time: {parsedTime}")
+                            dpg.add_text(f"Sent: {parsedTime}")
 
                         dpg.add_text(f"{msg.user_name}" + ":")
 
@@ -107,9 +107,7 @@ class IndexPage(BasePage):
 
                         dpg.add_button(label="<3")
 
-                        with dpg.popup(
-                            dpg.last_item(), mousebutton=dpg.mvMouseButton_Left
-                        ):
+                        with dpg.tooltip(dpg.last_item()):
                             reactionUsers = ", ".join(
                                 [reaction.user_name for reaction in msg.reactions]
                             )
@@ -169,8 +167,8 @@ class IndexPage(BasePage):
                         # NOTE: DO NOT refresh the page here, because the event
                         # listener will do it for us
                         # self.refresh()
-                    except grpc.RpcError:
-                        ErrorWindow("Cannot send message")
+                    except grpc.RpcError as err:
+                        ErrorWindow("Cannot send message: " + err.details())
                     except ValueError as e:
                         ErrorWindow(str(e))
 
