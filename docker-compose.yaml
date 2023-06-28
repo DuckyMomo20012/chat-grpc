@@ -6,6 +6,10 @@ services:
     build:
       context: .
       dockerfile: ./docker/server.Dockerfile
+    # NOTE: Add profile to this service to easily identify it for the up and
+    # down commands
+    profiles:
+      - server
     ports:
       - "9000:9000"
     networks:
