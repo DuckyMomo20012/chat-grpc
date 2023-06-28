@@ -28,6 +28,8 @@ def handleEventListener(page: BasePage, event: chat_service_pb2.SubscribeRespons
                 label="Notification",
             )
 
+            page.refresh()
+
     else:
         # Event type is unknown, so we just refresh the page
         page.refresh()
