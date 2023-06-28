@@ -1,6 +1,23 @@
 version: "3.9"
 
 services:
+  chat_service:
+    container_name: chat_service
+    build:
+      context: .
+      dockerfile: ./docker/server.Dockerfile
+    ports:
+      - "9000:9000"
+    networks:
+      - chat
+    environment:
+      DB_CONNECTION_STRING: postgres://postgres:postgres@chat_db:5432/chat
+      PORT: 9000
+      JWT_SECRET_KEY: secret
+
+    depends_on:
+      chat_db:
+        condition: service_healthy
   chat_db:
     container_name: chat_database
     image: postgres:13.3-alpine
