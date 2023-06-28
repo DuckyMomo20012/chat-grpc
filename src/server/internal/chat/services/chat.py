@@ -8,6 +8,8 @@ import src.server.internal.chat.entities.event as event
 import src.server.internal.chat.entities.event_queue as event_queue
 import src.server.internal.chat.entities.message as message
 
+LEAST_REACTION_COUNT = 2
+
 
 class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
     async def Send(self, request, context):
@@ -17,6 +19,23 @@ class ChatService(chat_service_pb2_grpc.ChatServiceServicer):
             context.set_details("Content is empty")
             context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
             return chat_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
+
+        latestMessage = (
+            await message.Message.filter(user_id=userId)
+            .order_by("-created_time")
+            .first()
+        )
+
+        if latestMessage:
+            # NOTE: Self reaction is not counted
+            latestMessageReactions = await latestMessage.reactions.all().exclude(
+                user_id=userId
+            )
+
+            if len(latestMessageReactions) < LEAST_REACTION_COUNT:
+                context.set_details("Message don't have enough reactions")
+                context.set_code(grpc.StatusCode.FAILED_PRECONDITION)
+                return chat_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
 
         newMessage = await message.Message.create(
             user_id=userId, content=request.content

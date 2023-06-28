@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import os
 
 import grpc
 from tortoise import Tortoise
@@ -19,6 +20,9 @@ _cleanup_coroutines = []
 PORT: int = env.int("PORT", 9000)
 JWT_SECRET_KEY: str = env.str("JWT_SECRET_KEY")
 DB_CONNECTION_STRING: str = env.str("DB_CONNECTION_STRING")
+
+LOG_DIR = "./logs"
+LOG_FILENAME = "server.log"
 
 
 class ClientPool:
@@ -103,7 +107,16 @@ server = Server()
 
 
 def main():
-    logging.basicConfig(level=logging.INFO)
+    if os.path.exists(LOG_DIR) is False:
+        os.makedirs(LOG_DIR)
+
+    logging.basicConfig(
+        level=logging.INFO,
+        handlers=[
+            logging.FileHandler(f"{LOG_DIR}/{LOG_FILENAME}"),
+        ],
+    )
+
     loop = asyncio.get_event_loop()
     try:
         loop.run_until_complete(serve())
