@@ -7,7 +7,7 @@ from tortoise import Tortoise
 import pkg.protobuf.auth_service.auth_service_pb2_grpc as auth_service_pb2_grpc
 import pkg.protobuf.chat_service.chat_service_pb2_grpc as chat_service_pb2_grpc
 import src.server.internal.auth.services.auth as AuthService
-import src.server.internal.auth.services.interceptor.interceptor as AuthInterceptor
+import src.server.internal.auth.services.interceptor.jwt_interceptor as jwt_interceptor
 import src.server.internal.chat.services.chat as ChatService
 from cli import env
 
@@ -51,7 +51,7 @@ class Server:
 
 
 async def serve():
-    interceptors = [AuthInterceptor.JWTAuthInterceptor(secret_key=JWT_SECRET_KEY)]
+    interceptors = [jwt_interceptor.JWTAuthInterceptor(secret_key=JWT_SECRET_KEY)]
     server = grpc.aio.server(interceptors=interceptors)
     chat_service_pb2_grpc.add_ChatServiceServicer_to_server(
         ChatService.ChatService(), server
