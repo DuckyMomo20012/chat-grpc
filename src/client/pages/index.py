@@ -130,8 +130,8 @@ class IndexPage(BasePage):
 
                                 dpg.set_item_label(sender, "Liked")
                                 dpg.configure_item(sender, enabled=False)
-                            except grpc.RpcError:
-                                ErrorWindow("User already liked this message")
+                            except grpc.RpcError as err:
+                                ErrorWindow(err.details())
 
                         isReacted = any(
                             reaction.user_id == app.app.userId
