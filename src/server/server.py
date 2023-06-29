@@ -20,6 +20,7 @@ _cleanup_coroutines = []
 
 PORT: int = env.int("PORT", 9000)
 JWT_SECRET_KEY: str = env.str("JWT_SECRET_KEY")
+JWT_EXPIRATION_TIME: int = env.int("JWT_EXPIRATION_TIME")
 DB_CONNECTION_STRING: str = env.str("DB_CONNECTION_STRING")
 
 LOG_DIR = "./logs"
