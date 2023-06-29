@@ -6,6 +6,14 @@ gen-proto:
 
 	@echo "Done"
 
+.PHONY: server
+server:
+	python cli.py server
+
+.PHONY: client
+client:
+	python cli.py client
+
 .PHONY: compose-db
 compose-db:
 	@echo "Starting database..."
