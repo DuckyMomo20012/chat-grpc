@@ -18,17 +18,21 @@ def handleEventListener(page: BasePage, event: chat_service_pb2.SubscribeRespons
         page.refresh()
 
     elif event.type == "EventType.REACTION":
-        reaction = app.app.client.chatServiceStub.GetReaction(
-            chat_service_pb2.GetReactionRequest(reaction_id=event.object_id)
-        )
-        if reaction:
-            PopupWindow(
-                f"{reaction.user_name} reacted to your message:"
-                f" {reaction.message_content}",
-                label="Notification",
+        try:
+            reaction = app.app.client.chatServiceStub.GetReaction(
+                chat_service_pb2.GetReactionRequest(reaction_id=event.object_id)
             )
 
-            page.refresh()
+            if reaction:
+                PopupWindow(
+                    f"{reaction.user_name} reacted to your message:"
+                    f" {reaction.message_content}",
+                    label="Notification",
+                )
+
+                page.refresh()
+        except grpc.RpcError:
+            ErrorWindow("Cannot get reaction")
 
     else:
         # Event type is unknown, so we just refresh the page
