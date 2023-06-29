@@ -1,4 +1,5 @@
 import datetime
+import hashlib
 
 import grpc
 import jwt
@@ -20,8 +21,11 @@ class AuthService(auth_service_pb2_grpc.AuthServiceServicer):
             context.set_code(grpc.StatusCode.ALREADY_EXISTS)
             return auth_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
         else:
+            # NOTE: Hash the password
+            newPassword = hashlib.sha256(request.password.encode()).hexdigest()
+
             newUser = await user.User.create(
-                user_name=request.user_name, password=request.password
+                user_name=request.user_name, password=newPassword
             )
 
             return auth_service_pb2.SignUpResponse(user_id=f"{newUser.id}")
@@ -34,7 +38,10 @@ class AuthService(auth_service_pb2_grpc.AuthServiceServicer):
             context.set_code(grpc.StatusCode.NOT_FOUND)
             return auth_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
 
-        if currUser.password != request.password:
+        # NOTE: Hash the password
+        newRequestPassword = hashlib.sha256(request.password.encode()).hexdigest()
+
+        if currUser.password != newRequestPassword:
             context.set_details("Password is incorrect")
             context.set_code(grpc.StatusCode.UNAUTHENTICATED)
             return auth_service_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
