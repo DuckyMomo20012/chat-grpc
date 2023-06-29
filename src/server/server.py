@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+import sys
 
 import grpc
 from tortoise import Tortoise
@@ -113,6 +114,7 @@ def main():
     logging.basicConfig(
         level=logging.INFO,
         handlers=[
+            logging.StreamHandler(sys.stdout),
             logging.FileHandler(f"{LOG_DIR}/{LOG_FILENAME}"),
         ],
     )
