@@ -263,16 +263,36 @@ poetry export -f requirements.txt --output requirements.txt
 
 - Start the server:
 
-  - Activate the virtual environment:
+  - With Poetry:
+
+    - Activate the virtual environment:
+
+      ```bash
+      poetry shell
+      ```
+
+    - Start the server:
+
+      ```bash
+      poe dev
+      ```
+
+  - With Makefile:
 
     ```bash
-    poetry shell
+    make server
     ```
 
-  - Start the server:
+  - With Docker compose:
 
     ```bash
-    poe dev
+    docker compose --profile server up -d
+    ```
+
+  - With Python:
+
+    ```bash
+    python cli.py server
     ```
 
 - Stop the database:
@@ -283,16 +303,30 @@ poetry export -f requirements.txt --output requirements.txt
 
 - Start the client:
 
-  - Activate the virtual environment:
+  - With Poetry:
+
+    - Activate the virtual environment:
+
+      ```bash
+      poetry shell
+      ```
+
+    - Start the client:
+
+      ```bash
+      poe dev client
+      ```
+
+  - With Makefile:
 
     ```bash
-    poetry shell
+    make client
     ```
 
-  - Start the client:
+  - With Python:
 
     ```bash
-    poe dev client
+    python cli.py client
     ```
 
 <!-- Start with Docker Compose -->
@@ -464,24 +498,24 @@ error to the client.
 Every time a client sends a message or reacts to a message, the server will
 create an `Event` record in the database. The `Event` record will be used to
 store history of the chat conversation. After the `Event` record is created, the
-`pre_save` hook will be called to create another `EventQueue` record. The number
-of `EventQueue` records is equal to the number of connected clients, which is
-stored as a `set` in the `Server` object. The `EventQueue` record will be used
-to broadcast the message to the clients.
+`post_save` hook will be called to create another `EventQueue` record. The
+number of `EventQueue` records is equal to the number of connected clients,
+which is stored as a `set` in the `Server` object. The `EventQueue` record will
+be used to broadcast the message to the clients.
 
 The `EventQueue` record is send back to the client as a `Subscribe` route
 response, and the record will be marked as sent by setting the `is_sent` field
 to `True`. The client will use the `Subscribe` route to receive the `EventQueue`
-and then send back the `message_id` back to the server to **acknowledge** that
-it has received the event queue. The server will then delete the `EventQueue`
-record from the database that matches the `message_id`.
+and then send back the `event_id` back to the server to **acknowledge** that it
+has received the event queue. The server will then delete the `EventQueue`
+record from the database that matches the `event_id`.
 
-If the client is logged in, but close the app without logging out, the server
-will also send the `EventQueue` record to the client when it connects again, as
-the `user_id` is still in the `Server` set of connected clients.
+If the client is logged in, but close the app **without logging out**, the
+server is able to resend the `EventQueue` record to the client when it connects
+again, as the `user_id` is still in the `Server` set of connected clients.
 
 > **Note**: Sometimes, the client receives the `EventQueue` record, but the
-> client don't send back the `message_id` to the server. This will cause the
+> client don't send back the `event_id` to the server. This will cause the
 > database to have a lot of `EventQueue` records that are not deleted. This
 > problem is not solved yet, and the `EventQueue` records have to be manually be
 > deleted.
@@ -517,8 +551,8 @@ After the client logged out, the access token will be deleted from the client.
 
 After login successfully, the client starts a **deamon thread** to send the
 `Subscribe` request to the server to receive the `EventQueue` record, within the
-loop. The client will send back to the server the `message_id` of the
-`EventQueue` record that it has just received.
+loop. The client will send back to the server the `event_id` of the `EventQueue`
+record that it has just received.
 
 <!-- Roadmap -->
 
