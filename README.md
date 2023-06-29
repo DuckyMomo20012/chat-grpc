@@ -347,6 +347,30 @@ For example:
 
 ### Makefile
 
+- `make gen-proto`: Generate protobuf files.
+
+  Usage:
+
+  ```bash
+  make gen-proto
+  ```
+
+- `make server`: Start the server.
+
+  Usage:
+
+  ```bash
+  make server
+  ```
+
+- `make client`: Start the client.
+
+  Usage:
+
+  ```bash
+  make client
+  ```
+
 - `make compose-up`: Start the server and database with docker compose.
 
   Usage:
