@@ -17,6 +17,13 @@ jobs:
   docker_publish:
     runs-on: "ubuntu-22.04"
 
+    # NOTE: We need to grant access to the package registry to write packages
+    # NOTE: We also need to grant access to the repository to read the code
+    # because we manually set the permissions for the token
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - uses: actions/checkout@v2
 
@@ -24,6 +31,6 @@ jobs:
       - name: Build and publish chat-grpc image to ghcr.io
         uses: macbre/push-to-ghcr@master
         with:
-          image_name: ${{ github.repository }}/chat-grpc # it will be lowercased internally
+          image_name: ${{ github.repository }} # it will be lowercased internally
           github_token: ${{ secrets.GITHUB_TOKEN }}
           dockerfile: ./docker/server.Dockerfile
