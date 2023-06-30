@@ -24,6 +24,6 @@ jobs:
       - name: Build and publish chat-grpc image to ghcr.io
         uses: macbre/push-to-ghcr@master
         with:
-          image_name: ${{ github.repository }} # it will be lowercased internally
+          image_name: ${{ github.repository }}/chat-grpc # it will be lowercased internally
           github_token: ${{ secrets.GITHUB_TOKEN }}
           dockerfile: ./docker/server.Dockerfile
