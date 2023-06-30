@@ -1,0 +1,29 @@
+name: Build and publish a Docker image to ghcr.io
+on:
+  # publish on releases, e.g. v2.1.13 (image tagged as "2.1.13" - "v" prefix is removed)
+  # release:
+  #   types: [published]
+
+  # NOTE: Triggering on pull requests to test the workflow, by opening a PR and
+  # pushing to it, the workflow will be automatically triggered
+  # pull_request:
+
+  # publish on pushes to the main branch (image tagged as "latest")
+  push:
+    branches:
+      - main
+
+jobs:
+  docker_publish:
+    runs-on: "ubuntu-22.04"
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # https://github.com/marketplace/actions/push-to-ghcr
+      - name: Build and publish chat-grpc image to ghcr.io
+        uses: macbre/push-to-ghcr@master
+        with:
+          image_name: ${{ github.repository }} # it will be lowercased internally
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dockerfile: ./docker/server.Dockerfile
