@@ -1,27 +1,42 @@
 [tool.poetry]
-name = "python-template"
+name = "chat-grpc"
 version = "0.0.0"
-description = "A simple python template"
+description = "Chat app with gRPC Python server"
 authors = ["Duong Vinh <tienvinh.duong4@gmail.com>"]
+package-mode = false
 
 [tool.poe.tasks]
 dev = "python cli.py"
-lint = "flake8"
-"sort_import" = "isort ."
-pretty = "black ."
-test = "echo You are running test command"
-deploy = "echo You are running deploy command"
-"demo" = "python demo.py"
-
-[tool.isort]
-profile = "black"
+lint = "ruff check --fix"
+pretty = "ruff format"
+demo = "python demo.py"
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 ignore_missing_imports = true
 
+[tool.ruff]
+extend-include = ["*.ipynb"]
+extend-exclude = ["pkg"]
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
+
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.12"
 environs = "^9.5.0"
 typer = "^0.7.0"
 dearpygui = "^1.9.0"
@@ -33,13 +48,10 @@ grpc-interceptor = "^0.15.2"
 pyjwt = "^2.7.0"
 
 [tool.poetry.group.dev.dependencies]
-poethepoet = "^0.20.0"
-black = "^23.1.0"
-isort = "^5.12.0"
-flake8 = "^6.0.0"
-mypy = "^1.0.0"
-pre-commit = "^3.0.4"
-poetry-pre-commit-plugin = "^0.1.2"
+poethepoet = "^0.26.1"
+mypy = "^1.10.1"
+pre-commit = "^3.7.1"
+ruff = "^0.4.10"
 types-protobuf = "^4.23.0.1"
 
 [build-system]

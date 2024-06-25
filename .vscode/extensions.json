@@ -1,6 +1,6 @@
 {
   "recommendations": [
-    "aliariff.auto-add-brackets",
+    "ms-python.black-formatter",
     "chunsen.bracket-select",
     "pustelto.bracketeer",
     "streetsidesoftware.code-spell-checker",
@@ -8,9 +8,9 @@
     "mikestead.dotenv",
     "EditorConfig.EditorConfig",
     "usernamehw.errorlens",
+    "tamasfe.even-better-toml",
     "ms-python.flake8",
     "GitHub.copilot",
-    "eamodio.gitlens",
     "kisstkondoros.vscode-gutter-preview",
     "ms-python.isort",
     "esbenp.prettier-vscode",
@@ -20,6 +20,7 @@
     "stkb.rewrap",
     "albert.TabOut",
     "wayou.vscode-todo-highlight",
-    "vscode-icons-team.vscode-icons"
+    "vscode-icons-team.vscode-icons",
+    "redhat.vscode-yaml"
   ]
 }
