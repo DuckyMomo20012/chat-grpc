@@ -41,7 +41,7 @@ environs = "^9.5.0"
 typer = "^0.7.0"
 dearpygui = "^1.9.0"
 grpcio = "^1.54.2"
-protobuf = "^4.23.3"
+protobuf = "^5.27.1"
 pydantic = "^1.10.9"
 tortoise-orm = {extras = ["asyncpg"], version = "^0.19.3"}
 grpc-interceptor = "^0.15.2"
@@ -52,7 +52,7 @@ poethepoet = "^0.26.1"
 mypy = "^1.10.1"
 pre-commit = "^3.7.1"
 ruff = "^0.4.10"
-types-protobuf = "^4.23.0.1"
+types-protobuf = "^5.26.0.20240422"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
