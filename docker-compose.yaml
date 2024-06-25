@@ -2,7 +2,7 @@ services:
   chat_service:
     build:
       context: .
-      dockerfile: ./docker/server.Dockerfile
+      dockerfile: ./docker/server/Dockerfile
     # NOTE: Add profile to this service to easily identify it for the up and
     # down commands
     profiles:
