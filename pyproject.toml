@@ -9,7 +9,7 @@ package-mode = false
 dev = "python cli.py"
 lint = "ruff check --fix"
 pretty = "ruff format"
-demo = "python demo.py"
+demo = "python assets/demo.py"
 
 [tool.mypy]
 python_version = "3.12"
