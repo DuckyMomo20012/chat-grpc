@@ -1,8 +1,5 @@
-version: "3.9"
-
 services:
   chat_service:
-    container_name: chat_service
     build:
       context: .
       dockerfile: ./docker/server.Dockerfile
@@ -13,7 +10,7 @@ services:
     ports:
       - "9000:9000"
     networks:
-      - chat
+      - chat-grpc-net
     environment:
       DB_CONNECTION_STRING: postgres://postgres:postgres@chat_db:5432/chat
       PORT: 9000
@@ -22,18 +19,18 @@ services:
     depends_on:
       chat_db:
         condition: service_healthy
+
   chat_db:
-    container_name: chat_database
     image: postgres:13.3-alpine
     restart: always
     networks:
-      - chat
+      - chat-grpc-net
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: chat
     ports:
-      - "5432:5432"
+      - "65432:5432"
     healthcheck:
       test: pg_isready -U postgres -d chat
       interval: 10s
@@ -41,5 +38,5 @@ services:
       retries: 5
 
 networks:
-  chat:
+  chat-grpc-net:
     driver: bridge
