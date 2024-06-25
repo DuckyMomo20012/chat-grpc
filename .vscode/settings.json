@@ -3,6 +3,11 @@
     "editor.defaultFormatter": "ms-vscode.cpptools",
     "editor.tabSize": 2
   },
+  "[go]": {
+    "editor.defaultFormatter": "golang.go",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4
+  },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.tabSize": 2
@@ -19,36 +24,55 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.tabSize": 2
   },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2
+  },
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "[proto]": {
+    "editor.defaultFormatter": "bufbuild.vscode-buf"
+  },
   "[python]": {
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": true
-    },
-    "editor.defaultFormatter": "ms-python.black-formatter",
-    "editor.tabSize": 4,
-    "editor.formatOnType": true
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4
+  },
+  "[sql]": {
+    "editor.defaultFormatter": "dorzey.vscode-sqlfluff",
+    "editor.tabSize": 2
+  },
+  "[terraform-vars]": {
+    "editor.tabSize": 2
+  },
+  "[terraform]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.tabSize": 2
   },
   "[xml]": {
     "editor.defaultFormatter": null
   },
   "C_Cpp.clang_format_style": "LLVM",
   // Code Spell Checker Extension
-  "cSpell.enableFiletypes": ["!dockercompose"],
   "cSpell.language": "en",
   //
-  "diffEditor.ignoreTrimWhitespace": false,
+  "diffEditor.diffAlgorithm": "advanced",
+  "diffEditor.experimental.showMoves": true,
   "editor.bracketPairColorization.enabled": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
-    "source.sortImports": false
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll": "explicit"
   },
   "editor.cursorSmoothCaretAnimation": "on",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.detectIndentation": false,
-  "editor.fontFamily": "JetBrains Mono",
-  "editor.fontLigatures": "JetBrains Mono",
+  "editor.fontFamily": "'Monaspace Neon', 'JetBrains Mono', monospace",
+  "editor.fontLigatures": "'calt', 'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'ss07', 'ss08', 'liga'",
   "editor.formatOnSave": true,
   "editor.guides.bracketPairs": "active",
   "editor.inlineSuggest.enabled": true,
+  "editor.inlineSuggest.fontFamily": "'Monaspace Argon'",
   "editor.insertSpaces": true,
   "editor.linkedEditing": true,
   "editor.mouseWheelZoom": true,
@@ -56,29 +80,52 @@
     "strings": true
   },
   "editor.renderLineHighlight": "gutter",
+  "editor.renderWhitespace": "none",
+  "editor.scrollbar.vertical": "hidden",
   "editor.smoothScrolling": true,
   "editor.stickyScroll.enabled": true,
   "editor.suggest.insertMode": "insert",
   "editor.suggest.preview": true,
   "editor.suggestSelection": "first",
+  "editor.unicodeHighlight.ambiguousCharacters": false,
+  "editor.unicodeHighlight.invisibleCharacters": false,
+  "editor.unicodeHighlight.nonBasicASCII": false,
   "editor.wordWrap": "on",
+  "errorLens.fontFamily": "'Monaspace Xenon', 'JetBrains Mono', 'Roboto Mono'",
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.expand": true,
   "extensions.ignoreRecommendations": true,
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
   "git.autofetch": true,
+  "github.copilot.editor.enableAutoCompletions": false,
   "github.copilot.enable": {
     "*": true,
-    "yaml": true,
+    "go": true,
+    "markdown": true,
     "plaintext": true,
-    "markdown": true
+    "scminput": false,
+    "yaml": true
+  },
+  "go.lintTool": "golangci-lint",
+  "go.toolsManagement.autoUpdate": true,
+  "gopls": {
+    "formatting.gofumpt": true
   },
   // Highlight Matching Tag
   "highlight-matching-tag.highlightSelfClosing": true,
   "highlight-matching-tag.showPath": false,
   //
   "html.autoClosingTags": true,
+  "iconify.inplace": false,
   "javascript.autoClosingTags": true,
   "javascript.preferences.importModuleSpecifier": "relative",
   "javascript.preferences.importModuleSpecifierEnding": "index",
@@ -96,10 +143,8 @@
   },
   "notebook.lineNumbers": "on",
   "prettier.proseWrap": "always",
-  "python.formatting.provider": "none",
-  "python.linting.flake8Enabled": true,
-  "python.linting.mypyEnabled": true,
-  "isort.args": ["--profile", "black"],
+  "prisma.showPrismaDataPlatformNotification": false,
+  "redhat.telemetry.enabled": false,
   // Rewrap Extension
   "rewrap.autoWrap.enabled": true,
   "rewrap.autoWrap.notification": "text",
@@ -123,19 +168,9 @@
       "command": "workbench.action.openSettingsJson",
       "id": "open-settings",
       "name": "Open settings.json",
-      "priority": -2,
+      "priority": -3,
       "text": "$(gear)",
       "tooltip": "Open settings.json"
-    },
-    {
-      "alignment": "left",
-      "color": "#FE640B",
-      "command": "workbench.action.toggleSplitEditorInGroup",
-      "id": "split-group",
-      "name": "Split (Group)",
-      "priority": -3,
-      "text": "$(split-horizontal)",
-      "tooltip": "Split an editor without creating a new group"
     },
     {
       "alignment": "left",
@@ -146,27 +181,6 @@
       "priority": -5,
       "text": "$(arrow-down)$(json)",
       "tooltip": "Sort JS object keys (ascending)"
-    },
-    {
-      "alignment": "left",
-      "color": "#179299",
-      "command": "editor.action.sortLinesAscending",
-      "id": "sort-line-ascending",
-      "name": "Sort Lines Ascending",
-      "priority": -6,
-      "text": "$(arrow-down)$(list-selection)",
-      "tooltip": "Sort Lines Ascending"
-    },
-    {
-      "alignment": "left",
-      "color": "#04A5E5",
-      "command": "editor.emmet.action.removeTag",
-      "filterLanguageId": "html|javascriptreact|typescriptreact|markdown",
-      "id": "remove-tag",
-      "name": "Remove HTML Tag (Emmet)",
-      "priority": -8,
-      "text": "$(trash)$(code)",
-      "tooltip": "Remove HTML tag"
     },
     {
       "alignment": "left",
@@ -191,8 +205,6 @@
       "tooltip": "Split/Join HTML tag"
     }
   ],
-  //
-  "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.cursorBlinking": true,
   "terminal.integrated.defaultProfile.windows": "Command Prompt",
   "terminal.integrated.shellIntegration.decorationsEnabled": "both",
@@ -261,23 +273,24 @@
   //
   "typescript.autoClosingTags": true,
   "vsicons.dontShowNewVersionMessage": true,
-  // WindiCSS IntelliSense Extension
-  "windicss.enableCodeFolding": false,
-  "windicss.foldByLength": true,
-  "windicss.foldLength": 80,
-  "windicss.sortOnSave": false,
-  //
-  "window.commandCenter": true,
+  "window.commandCenter": false,
+  "window.customTitleBarVisibility": "auto",
   "window.dialogStyle": "custom",
   "window.menuBarVisibility": "compact",
   "window.titleBarStyle": "custom",
+  "workbench.activityBar.location": "top",
+  "workbench.colorCustomizations": {
+    "[Catppuccin Frappé]": {
+      "sideBar.border": "#e78284"
+    }
+  },
   "workbench.colorTheme": "Catppuccin Frappé",
   "workbench.editor.historyBasedLanguageDetection": true,
   "workbench.editor.scrollToSwitchTabs": true,
   "workbench.iconTheme": "vscode-icons",
-  "workbench.layoutControl.enabled": true,
-  "workbench.layoutControl.type": "both",
   "workbench.list.smoothScrolling": true,
-  "workbench.localHistory.maxFileEntries": 50,
-  "workbench.localHistory.mergeWindow": 60
+  "workbench.localHistory.maxFileEntries": 100,
+  "workbench.localHistory.mergeWindow": 60,
+  "workbench.sideBar.location": "right",
+  "workbench.tree.enableStickyScroll": true
 }
