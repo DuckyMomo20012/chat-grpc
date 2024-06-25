@@ -195,7 +195,7 @@ variables.
 
 ### :bangbang: Prerequisites
 
-- Python: `>= 3.11`.
+- Python: `>= 3.12`.
 
 - This project uses [Poetry](https://python-poetry.org/) as package manager:
 
@@ -228,6 +228,8 @@ Install dependencies:
 
 ```bash
 poetry install
+
+pre-commit install
 ```
 
 OR:
@@ -236,6 +238,8 @@ Install dependencies with `pip`:
 
 ```bash
 pip install -r requirements.txt
+
+pre-commit install
 ```
 
 <details>
