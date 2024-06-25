@@ -19,17 +19,17 @@ class AuthServiceStub(object):
                 '/auth.v1.AuthService/SignUp',
                 request_serializer=pkg_dot_protobuf_dot_auth__service_dot_auth__service__pb2.SignUpRequest.SerializeToString,
                 response_deserializer=pkg_dot_protobuf_dot_auth__service_dot_auth__service__pb2.SignUpResponse.FromString,
-                )
+                _registered_method=True)
         self.SignIn = channel.unary_unary(
                 '/auth.v1.AuthService/SignIn',
                 request_serializer=pkg_dot_protobuf_dot_auth__service_dot_auth__service__pb2.SignInRequest.SerializeToString,
                 response_deserializer=pkg_dot_protobuf_dot_auth__service_dot_auth__service__pb2.SignInResponse.FromString,
-                )
+                _registered_method=True)
         self.SignOut = channel.unary_unary(
                 '/auth.v1.AuthService/SignOut',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                )
+                _registered_method=True)
 
 
 class AuthServiceServicer(object):
@@ -75,6 +75,7 @@ def add_AuthServiceServicer_to_server(servicer, server):
     generic_handler = grpc.method_handlers_generic_handler(
             'auth.v1.AuthService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('auth.v1.AuthService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
@@ -92,11 +93,21 @@ class AuthService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/auth.v1.AuthService/SignUp',
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/auth.v1.AuthService/SignUp',
             pkg_dot_protobuf_dot_auth__service_dot_auth__service__pb2.SignUpRequest.SerializeToString,
             pkg_dot_protobuf_dot_auth__service_dot_auth__service__pb2.SignUpResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def SignIn(request,
@@ -109,11 +120,21 @@ class AuthService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/auth.v1.AuthService/SignIn',
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/auth.v1.AuthService/SignIn',
             pkg_dot_protobuf_dot_auth__service_dot_auth__service__pb2.SignInRequest.SerializeToString,
             pkg_dot_protobuf_dot_auth__service_dot_auth__service__pb2.SignInResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def SignOut(request,
@@ -126,8 +147,18 @@ class AuthService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/auth.v1.AuthService/SignOut',
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/auth.v1.AuthService/SignOut',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)

@@ -19,37 +19,37 @@ class ChatServiceStub(object):
                 '/chat.v1.ChatService/Send',
                 request_serializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.SendRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                )
+                _registered_method=True)
         self.GetMessage = channel.unary_unary(
                 '/chat.v1.ChatService/GetMessage',
                 request_serializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.GetMessageRequest.SerializeToString,
                 response_deserializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.Message.FromString,
-                )
+                _registered_method=True)
         self.React = channel.unary_unary(
                 '/chat.v1.ChatService/React',
                 request_serializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.ReactionRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                )
+                _registered_method=True)
         self.GetReaction = channel.unary_unary(
                 '/chat.v1.ChatService/GetReaction',
                 request_serializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.GetReactionRequest.SerializeToString,
                 response_deserializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.Reaction.FromString,
-                )
+                _registered_method=True)
         self.Fetch = channel.unary_stream(
                 '/chat.v1.ChatService/Fetch',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
                 response_deserializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.Message.FromString,
-                )
+                _registered_method=True)
         self.Subscribe = channel.unary_stream(
                 '/chat.v1.ChatService/Subscribe',
                 request_serializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.SubscribeRequest.SerializeToString,
                 response_deserializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.SubscribeResponse.FromString,
-                )
+                _registered_method=True)
         self.HealthCheck = channel.unary_unary(
                 '/chat.v1.ChatService/HealthCheck',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
                 response_deserializer=pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.HealthCheckResponse.FromString,
-                )
+                _registered_method=True)
 
 
 class ChatServiceServicer(object):
@@ -139,6 +139,7 @@ def add_ChatServiceServicer_to_server(servicer, server):
     generic_handler = grpc.method_handlers_generic_handler(
             'chat.v1.ChatService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('chat.v1.ChatService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
@@ -156,11 +157,21 @@ class ChatService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/chat.v1.ChatService/Send',
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/chat.v1.ChatService/Send',
             pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.SendRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def GetMessage(request,
@@ -173,11 +184,21 @@ class ChatService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/chat.v1.ChatService/GetMessage',
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/chat.v1.ChatService/GetMessage',
             pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.GetMessageRequest.SerializeToString,
             pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.Message.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def React(request,
@@ -190,11 +211,21 @@ class ChatService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/chat.v1.ChatService/React',
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/chat.v1.ChatService/React',
             pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.ReactionRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def GetReaction(request,
@@ -207,11 +238,21 @@ class ChatService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/chat.v1.ChatService/GetReaction',
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/chat.v1.ChatService/GetReaction',
             pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.GetReactionRequest.SerializeToString,
             pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.Reaction.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def Fetch(request,
@@ -224,11 +265,21 @@ class ChatService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/chat.v1.ChatService/Fetch',
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/chat.v1.ChatService/Fetch',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.Message.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def Subscribe(request,
@@ -241,11 +292,21 @@ class ChatService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/chat.v1.ChatService/Subscribe',
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/chat.v1.ChatService/Subscribe',
             pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.SubscribeRequest.SerializeToString,
             pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.SubscribeResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def HealthCheck(request,
@@ -258,8 +319,18 @@ class ChatService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/chat.v1.ChatService/HealthCheck',
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/chat.v1.ChatService/HealthCheck',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             pkg_dot_protobuf_dot_chat__service_dot_chat__service__pb2.HealthCheckResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
