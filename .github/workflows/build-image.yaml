@@ -33,4 +33,4 @@ jobs:
         with:
           image_name: ${{ github.repository }} # it will be lowercased internally
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          dockerfile: ./docker/server.Dockerfile
+          dockerfile: ./docker/server/Dockerfile

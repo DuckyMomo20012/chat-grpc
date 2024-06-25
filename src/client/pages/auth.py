@@ -7,6 +7,7 @@ import grpc
 import pkg.protobuf.auth_service.auth_service_pb2 as auth_service_pb2
 import src.client.app as app
 from src.shared.pages.base import BasePage
+from src.shared.pages.popup import PopupWindow
 
 
 class AuthMode(Enum):
@@ -49,6 +50,11 @@ class AuthPage(BasePage):
         try:
             app.app.client.authServiceStub.SignUp(
                 auth_service_pb2.SignUpRequest(user_name=username, password=password)
+            )
+
+            PopupWindow(
+                "Sign up successful. You can now sign in.",
+                label="Notification",
             )
         except grpc.RpcError as rpc_error:
             dpg.set_value("t_status", rpc_error.details())
