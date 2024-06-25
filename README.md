@@ -179,7 +179,7 @@ E.g:
 PORT="9000"
 JWT_SECRET_KEY="secret"
 JWT_EXPIRATION_TIME="3600"
-DB_CONNECTION_STRING="postgres://postgres:postgres@localhost:5432/chat"
+DB_CONNECTION_STRING="postgres://postgres:postgres@localhost:65432/chat"
 
 SERVER_HOST="localhost"
 ```
